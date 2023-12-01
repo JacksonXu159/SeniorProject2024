@@ -1,0 +1,6 @@
+ragas
+langchain
+chromadb
+openai
+datasets
+
