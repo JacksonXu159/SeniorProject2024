@@ -1,5 +1,5 @@
 import os
-os.environ["OPENAI_API_KEY"] = "API_KEY_HERE"
+os.environ["OPENAI_API_KEY"] = "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"
 from langchain.document_loaders import DirectoryLoader
 from langchain.document_loaders import TextLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
@@ -18,6 +18,7 @@ from ragas import evaluate
 from datasets import Dataset 
 from ragas.llms import LangchainLLM
 import re
+from langchain.memory import ConversationBufferMemory
 
 from ragas.metrics import (
     answer_relevancy,
@@ -42,7 +43,7 @@ def create_eval_data_set():
 
                 # Generate answers and contexts using the chat function
                 answer, contexts = chat(question)
-
+                print(answer)
                 # Combine and format context content
                 formatted_contexts = [doc.page_content.replace("\n", " .") for doc in contexts]
 
@@ -76,81 +77,100 @@ def evaluate_rag():
     return result
 
 
-def chat(query):
+def chat():
     default_ef = SentenceTransformerEmbeddings(model_name="all-MiniLM-L6-v2")
     if not os.path.exists("db"):
         text_loader_kwargs={'autodetect_encoding': True}
         loader = DirectoryLoader("data", glob="**/*.txt", loader_cls=TextLoader, loader_kwargs=text_loader_kwargs,silent_errors=True)
         documents = loader.load()
-        text_splitter = RecursiveCharacterTextSplitter(chunk_size=200, chunk_overlap=0, length_function  = len)
+        text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=0, length_function  = len)
         docs = text_splitter.split_documents(documents)
         db = Chroma.from_documents(documents=docs,embedding=default_ef,persist_directory="db")
         db.persist()
 
     db = Chroma(persist_directory="db",embedding_function=default_ef)
     turbo_llm = ChatOpenAI(temperature=0.3,model_name='gpt-3.5-turbo-16k')
-    chain = load_qa_chain(turbo_llm, chain_type="stuff",verbose=True)
-
-
+    
     template = """Scenario:
     You are a Vanguard helper clerk assisting a user with their Vanguard questions.
     Vanguard is an investment firm.
     Instructions:
     Convert the clients message into a search key in relation to actions the client can consider with the website. You have to key in the users intent into a vector database to get the results you want
-    Provide your response in the form of words separated by commas, produce 2 to 8 results.
-    The key terms must be strictly Vanguard related.
-    Dont not add anything else, just the word groups.No formatting or bullet points.
+    Provide your response in the form of words separated by commas, produce up to 8 results.
     Customer Message:
     {text}
-
     Question:
     What actions would you suggest to the customer based on their message?"""
+    
     prompt_template = PromptTemplate(input_variables=["text"], template=template)
     answer_chain = LLMChain(llm=turbo_llm, prompt=prompt_template)
-    searchTerms = "".join(answer_chain.run(query))
-    print(searchTerms)
-    st = searchTerms.split(",")
-    matching_docs = []
+    
+    template = """You are a customer support specialist chatbot helping Vanguard clients with their questions while browsing the Vanguard website.
+    Vanguard is an investment firm.
+    Use the following pieces of context and recommended actions and terms to answer the question at the end.
+    If you don't know the answer, just say “Sorry, con’t answer your question, try to ask it in a different way”, don't try to make up an answer.
 
-    for s in st:
+    context: {context}
+    Recommendation:{searchTermsResult} 
+    chat history: {chat_history} 
+    User Message:{question}"""
+
+    prompt = PromptTemplate(
+    input_variables=["chat_history", "question", "context","searchTermsResult"], 
+    template=template
+    )
+    memory = ConversationBufferMemory(memory_key="chat_history", input_key="question")
+    chain = load_qa_chain(turbo_llm, chain_type="stuff", memory=memory,verbose=True,prompt=prompt)
+
+
+    while True:
+        query = input("Enter your query (type 'exit' to quit): ")
+        if query == "exit":
+            break
+
+        searchTerms = "".join(answer_chain.run(query))
+        st = searchTerms.split(",")
+        matching_docs = []
+
+        for s in st:
+            seen_content = set()
+            unique_documents = []
+            documents = db.similarity_search(s,k=2)
+            for doc in documents:
+                if doc.page_content not in seen_content:
+                    seen_content.add(doc.page_content)
+                    unique_documents.append(doc)
+
+            matching_docs += unique_documents
+
         seen_content = set()
         unique_documents = []
-        documents = db.similarity_search(s,k=2)
+        documents = db.similarity_search(query,k=1)
         for doc in documents:
             if doc.page_content not in seen_content:
                 seen_content.add(doc.page_content)
                 unique_documents.append(doc)
 
-        matching_docs += unique_documents
-
-    seen_content = set()
-    unique_documents = []
-    documents = db.similarity_search(query,k=1)
-    for doc in documents:
-        if doc.page_content not in seen_content:
-            seen_content.add(doc.page_content)
-            unique_documents.append(doc)
-
-
-    prompt = "You are a customer support specialist helping Vanguard clients with their questions while browsing the Vanguard website.Vanguard is an investment firm.Use the following pieces of context and recommended actions to answer the question at the end. Find out what actions the client might need to make. If you don't know the answer, just say “Sorry, con’t answer your question, try to ask it in a different way”, don't try to make up an answer. Recommendation:"+ searchTerms + "User Message:"+query
-
-    answer =  chain.run(input_documents=matching_docs, question=prompt)
-
-    return answer,matching_docs
+        response = chain(
+            {
+                "input_documents": matching_docs,
+                "question": query,
+                "searchTermsResult": searchTerms,
+            },
+            return_only_outputs=True,
+        )
+        print(response['output_text'])
+    return response
 
 
 def main():
-    EvaluationToggle = True
-
-    
-    #Create evaluation dataset if it doesn't exist
-    if not os.path.exists("eval_dataset"):
-        create_eval_data_set();
-
+    EvaluationToggle = False
     #toggle between chatting and evaluation
     if EvaluationToggle:
+        #Create evaluation dataset if it doesn't exist
+        if not os.path.exists("eval_dataset"):
+            create_eval_data_set();
         print(evaluate_rag())
     else:
-        query = sys.argv[1]
-        print(chat(query))
+        chat()
 main()
