@@ -1,0 +1,6 @@
+How to send a wire to your bank
+You can wire funds from your Vanguard account to your bank from the sell page.
+
+On the right-hand side of the page under 2. Where’s the money going? select your bank account and the wire method.
+
+Vanguard Brokerage charges a $10 wire fee for each holding you are redeeming from.The fee is not charged to Flagship and Flagship Select clients. Check with your bank to determine if it charges a fee to receive wire transactions.

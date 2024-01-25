@@ -1,0 +1,5 @@
+Help sending money from a stock or ETF to your bank
+This type of transaction involves two steps:
+Sell shares of the ETF or stock on the Trade Stocks and ETFs page. The proceeds will automatically be sent to your settlement fund.
+
+Send money from your settlement fund to your bank on this page. Follow these step-by-step instructions to learn how to send money from your settlement fund to your bank.

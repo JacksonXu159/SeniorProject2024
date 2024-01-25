@@ -1,5 +1,5 @@
 import os
-os.environ["OPENAI_API_KEY"] = "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"
+os.environ["OPENAI_API_KEY"] = "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"
 from langchain.document_loaders import DirectoryLoader, TextLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.embeddings import SentenceTransformerEmbeddings
@@ -33,9 +33,9 @@ if not os.path.exists("db"):
     db.persist()
 
 db = Chroma(persist_directory="db", embedding_function=default_ef)
-turbo_llm = ChatOpenAI(temperature=0.3, model_name='gpt-3.5-turbo-16k')
+gpt_turbo = ChatOpenAI(temperature=0.3, model_name='gpt-3.5-turbo-16k')
 
-template = """Scenario:
+templateOne = """Scenario:
 You are a Vanguard helper clerk assisting a user with their Vanguard questions.
 Vanguard is an investment firm.
 Instructions:
@@ -46,10 +46,10 @@ Customer Message:
 Question:
 What actions would you suggest to the customer based on their message?"""
 
-prompt_template = PromptTemplate(input_variables=["text"], template=template)
-answer_chain = LLMChain(llm=turbo_llm, prompt=prompt_template)
+promptOne = PromptTemplate(input_variables=["text"], template=templateOne)
+chainOne = LLMChain(llm=gpt_turbo, verbose=False,prompt= promptOne)
 
-template = """You are a customer support specialist chatbot helping Vanguard clients with their questions while browsing the Vanguard website.
+templateTwo = """You are a customer support specialist chatbot helping Vanguard clients with their questions while browsing the Vanguard website.
 Vanguard is an investment firm.
 Continue the conversation with the user by answering their question.
 Use the following pieces of context and recommended actions and terms to answer the user's question if necessary otherwise ignore them.
@@ -60,18 +60,31 @@ Recommendation:
 {searchTermsResult} 
 conversation history:
 {chat_history} 
-User Message:
-{question}
+Human: {question}
 Vanguard Chatbot:"""
 
-prompt = PromptTemplate(
+promptTwo = PromptTemplate(
     input_variables=["chat_history", "question", "context", "searchTermsResult"],
-    template=template
+    template=templateTwo
 )
 memory = ConversationBufferMemory(memory_key="chat_history", input_key="question")
-chain = load_qa_chain(turbo_llm, chain_type="stuff", memory=memory, verbose=True, prompt=prompt)
+chainTwo = load_qa_chain(gpt_turbo, chain_type="stuff", memory=memory, verbose=False, prompt=promptTwo)
 
 
+templateThree = """Scenario:
+You are a Vanguard chatbot who only responses with yes or no, assisting a user with their Vanguard questions.
+Vanguard is an investment firm.
+Instructions:
+Consider the following conversation history with a user.
+Output only 'yes' or 'no' if the users last message requires querying the vanguard information database.
+
+conversation History:
+{chat_history}
+Human: {text}
+Vanguard Chatbot:"""
+
+promptThree = PromptTemplate(input_variables=["text",'chat_history'], template=templateThree)
+chainThree = LLMChain(llm=gpt_turbo, prompt= promptThree)
 def create_eval_data_set():
     # Initialize a dictionary to hold data samples
     data_samples = {
@@ -86,9 +99,8 @@ def create_eval_data_set():
                 # Splitting the line into question and ground truth
                 question, ground_truth = line.split("ground_truths:", 1)
 
-                # Generate answers and contexts using the chat function
+                memory.clear()
                 answer, contexts = chat(question)
-                print(answer)
                 # Combine and format context content
                 formatted_contexts = [doc.page_content.replace("\n", " .") for doc in contexts]
 
@@ -97,6 +109,7 @@ def create_eval_data_set():
                 data_samples['contexts'].append(formatted_contexts)
                 data_samples['answer'].append(answer)
                 data_samples['ground_truths'].append([ground_truth])
+
     except FileNotFoundError:
         print("Error: eval_questions.txt file not found.")
         return
@@ -122,8 +135,9 @@ def evaluate_rag():
     return result
 
 
-def chat(query):
-    searchTerms = "".join(answer_chain.run(query))
+def chat(query,EvaluationToggle=True):
+    
+    searchTerms = "".join(chainOne.run(query))
     st = searchTerms.split(",")
     matching_docs = []
 
@@ -138,15 +152,9 @@ def chat(query):
 
         matching_docs += unique_documents
 
-    seen_content = set()
-    unique_documents = []
-    documents = db.similarity_search(query, k=1)
-    for doc in documents:
-        if doc.page_content not in seen_content:
-            seen_content.add(doc.page_content)
-            unique_documents.append(doc)
 
-    response = chain(
+
+    response = chainTwo(
         {
             "input_documents": matching_docs,
             "question": query,
@@ -154,11 +162,15 @@ def chat(query):
         },
         return_only_outputs=True,
     )
-    return response['output_text']
+    
+    if EvaluationToggle:
+        return response['output_text'],matching_docs
+    else:
+        return response['output_text']
 
 
 def main():
-    EvaluationToggle = False
+    EvaluationToggle = True
     # toggle between chatting and evaluation
     if EvaluationToggle:
         # Create evaluation dataset if it doesn't exist
@@ -170,7 +182,7 @@ def main():
             query = input("Enter your query (type 'exit' to quit): ")
             if query == "exit":
                 break
-            print(chat(query))
+            print(chat(query,EvaluationToggle))
 
 
 if __name__ == "__main__":
