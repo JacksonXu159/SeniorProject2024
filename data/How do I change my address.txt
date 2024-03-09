@@ -17,3 +17,5 @@ On the Review and submit page, review the details of your address change. When y
 
 
 All investing is subject to risk, including the possible loss of the money you invest
+
+[Change_address]

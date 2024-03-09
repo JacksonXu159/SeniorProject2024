@@ -1,0 +1,70 @@
+How can I quickly see the total value of my investment portfolio? ground_truths:Dashboard
+Is there a way to find out when I last logged into my investment account? ground_truths:Dashboard
+Where can I get detailed information about my investment accounts, including my current balances and rates of return? ground_truths:Dashboard
+Can I see how my investments have performed over time through graphs or charts? ground_truths:Dashboard
+How can I understand the distribution of my assets across different investment categories? ground_truths:Dashboard
+Are there tools available to help me compare my actual asset allocation against my target allocations? ground_truths:Dashboard
+I want to review recent dividend payments I've received; where can I find this information? ground_truths:Dashboard
+Is there a dashboard available that allows personal investors to manage their portfolios more effectively? ground_truths:Dashboard
+How can I monitor my investment returns in a visual format? ground_truths:Dashboard
+Where can I access a comprehensive overview of my investment activities and account performance? ground_truths:Dashboard
+How do I see what I've got in my investments? ground_truths:Dashboard
+Got a quick view of my investment value? ground_truths:Dashboard
+Where's my last login for investments? ground_truths:Dashboard
+How do I check my investment growth? ground_truths:Dashboard
+Can I see my stocks vs bonds split? ground_truths:Dashboard
+Is there a way to track my investment targets? ground_truths:Dashboard
+Where do I find my latest dividend info? ground_truths:Dashboard
+How to manage my investments easily? ground_truths:Dashboard
+Got a visual on my investment returns? ground_truths:Dashboard
+Where's the overview of my investment moves? ground_truths:Dashboard
+Where can I find an overview of all my Vanguard account balances? ground_truths:Balances
+How can I view the balances of both my managed and self-managed accounts in one place? ground_truths:Balances
+Is there a section on Vanguard's platform that shows the total assets I have under their management? ground_truths:Balances
+Can I get a detailed list of my investment accounts and their current balances on Vanguard? ground_truths:Balances
+How do I check the total value of my investments with Vanguard? ground_truths:Balances
+Where on Vanguard's platform can I see a summary of my financial assets? ground_truths:Balances
+Is there a way to compare the balances of my managed versus self-managed accounts on Vanguard? ground_truths:Balances
+How can I quickly access information about my account balances on Vanguard's investment platform? ground_truths:Balances
+What section on Vanguard's website provides an overview of an investor's account balances? ground_truths:Balances
+How do I find out the combined total of my managed and self-managed accounts with Vanguard? ground_truths:Balances
+Where's my Vanguard money at? ground_truths:Balances
+How do I see all my Vanguard balances quick? ground_truths:Balances
+Got a total for my Vanguard stuff? ground_truths:Balances
+Can I check my Vanguard accounts in one spot? ground_truths:Balances
+How much is in my Vanguard accounts? ground_truths:Balances
+Any quick look for my Vanguard cash? ground_truths:Balances
+Vanguard balances, where to find them? ground_truths:Balances
+Snapshot of my Vanguard money, how? ground_truths:Balances
+My Vanguard total, how to check? ground_truths:Balances
+Quick way to see what I've got with Vanguard? ground_truths:Balances
+Where can I view a summary of my financial transactions on Vanguard? ground_truths:Transactions
+How do I find my investment account balance and managed account totals? ground_truths:Transactions
+Is there a way to see a detailed list of my recent securities transactions on Vanguard? ground_truths:Transactions
+Can I manage my accounts and transfer money between them on the Vanguard platform? ground_truths:Transactions
+How do I customize the information displayed in my transaction overview on Vanguard? ground_truths:Transactions
+How do I check my Vanguard money moves? ground_truths:Transactions
+Got a way to see what's in my Vanguard accounts and what I've been trading? ground_truths:Transactions
+Where's the list of my latest buys and sells on Vanguard? ground_truths:Transactions
+Can I move money around in Vanguard and tweak how things look? ground_truths:Transactions
+How do I change what I see in my Vanguard transactions page? ground_truths:Transactions
+How can I find the unique identifier for a specific order on the platform? ground_truths:OrderDetail
+Where can I check the current status of my order? ground_truths:OrderDetail
+Is there a section to see the type of transaction I made (buy, sell, transfer)? ground_truths:OrderDetail
+How do I find out the number of dollars or shares involved in my transaction? ground_truths:OrderDetail
+Can I view the ticker symbol and name of the investment product for my order? ground_truths:OrderDetail
+Where do I see how my transaction was processed? ground_truths:OrderDetail
+How can I access additional details like funding methods and bank information for my order? ground_truths:OrderDetail
+Is there a feature to retrieve quotes for my orders? ground_truths:OrderDetail
+Can I print the details of my order directly from the platform? ground_truths:OrderDetail
+How do I navigate between different orders I've placed? ground_truths:OrderDetail
+How do I spot my order number in the system? ground_truths:OrderDetail
+Where's the update on my order's progress? ground_truths:OrderDetail
+Got a place to check if my order was a buy, sell, or transfer? ground_truths:OrderDetail
+How do I see how many shares or how much cash was in my deal? ground_truths:OrderDetail
+Can I find out what I traded, like the fund name or code? ground_truths:OrderDetail
+How can I tell how they handled my transaction? ground_truths:OrderDetail
+Where do I dig into the nitty-gritty like which bank account I used? ground_truths:OrderDetail
+Is there a way to pull up a quote for what I ordered? ground_truths:OrderDetail
+Can I print out my order details right off the website? ground_truths:OrderDetail
+How do I flip through my past orders? ground_truths:OrderDetail

@@ -1,0 +1,2 @@
+Balances: is a section from Vanguard's investment platform, showing an overview of an investor account balances. It lists both managed and self-managed accounts with their respective balances and the total assets under Vanguard. 
+https://vanguard/Balances/ 

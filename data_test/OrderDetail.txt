@@ -1,0 +1,12 @@
+OrderDetail:the layout is structured to provide users with a clear overview of a specific order, highlighting various informational fields:
+
+Order Number: A field likely for a unique identifier for the order.
+Status: Indicates the current stage of the order
+Transaction Type: This field would specify the nature of the transaction (e.g., buy, sell, transfer).
+Dollars/Shares: Reflects the quantity involved in the transaction.
+Symbol: The ticker or code for the investment product
+Name: Provides the name of the fund or investment
+Transaction Method: Specifies how the transaction is being processed.
+Additional fields are available for entering or viewing details related to funding methods, principal amounts, bank routing and account numbers, the name on the bank account, and the bank itself, among others.
+
+The interface is designed for functionality, allowing the user to interact with and understand the progress and specifics of their financial transactions. With features such as quote retrieval, print options, and navigational arrows for moving between orders, the page is evidently tailored for active and direct management of investment activities.

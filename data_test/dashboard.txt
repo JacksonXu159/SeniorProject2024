@@ -1,0 +1,8 @@
+Dashboard:is a user-friendly interface designed for personal investors to monitor and manage their investment portfolio. It includes several sections.
+The main overview, including quick access to the portfolio's total value and the user's last login information.
+Detailed information about the user's accounts, including balances and rates of return.
+A graphical representation of the account's performance over time, including investment returns.
+A visual and numerical representation of the distribution of assets between different categories, such as stocks and bonds, along with the targets for each category.
+A log of the latest activities within the account, specifically dividend receipts in this case.
+
+https://vanguard/Dashboard/ 
