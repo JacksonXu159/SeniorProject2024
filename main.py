@@ -1,5 +1,5 @@
 import os
-os.environ["OPENAI_API_KEY"] = "API_KEY_HERE"
+os.environ["OPENAI_API_KEY"] = ""
 from langchain.document_loaders import DirectoryLoader, TextLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.embeddings import SentenceTransformerEmbeddings
@@ -15,8 +15,6 @@ from datasets import Dataset
 from ragas.llms import LangchainLLM
 from ragas.metrics import (
     answer_relevancy,
-    context_recall,
-    context_precision,
 )
 
 
@@ -27,7 +25,7 @@ if not os.path.exists("db"):
     text_loader_kwargs = {'autodetect_encoding': True}
     loader = DirectoryLoader("data_test", glob="**/*.txt", loader_cls=TextLoader, loader_kwargs=text_loader_kwargs, silent_errors=True)
     documents = loader.load()
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=0, length_function=len)
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1400, chunk_overlap=0, length_function=len)
     docs = text_splitter.split_documents(documents)
     db = Chroma.from_documents(documents=docs, embedding=default_ef, persist_directory="db")
     db.persist()
@@ -52,7 +50,7 @@ chainOne = LLMChain(llm=gpt_turbo, verbose=False,prompt= promptOne)
 templateTwo = """You are a webpage directory navigation bot helping Vanguard clients navigate to the right page on the Vanguard website.
 Vanguard is an investment firm.
 Use the following context showing the available webpages and recommend the best webpage based on the users question.
-Output must follow this format page:[pageName] link:[link].
+Output must follow this format "pageName".
 context: 
 {context}
 Human: {question}"""
@@ -66,38 +64,45 @@ chainTwo = load_qa_chain(gpt_turbo, chain_type="stuff", verbose=False, prompt=pr
 
 def create_eval_data_set():
     # Initialize a dictionary to hold data samples
+
+    passCount = 0
+    failCount = 0
     data_samples = {
         'question': [],
         'ground_truths': [],
         'answer': [],
-        'contexts': []
+        #'contexts': []
     }
     try:
-        with open('eval_questions.txt', 'r') as file:
+        with open('eval_questions_v2.txt', 'r') as file:
             for line in file:
                 # Splitting the line into question and ground truth
                 question, ground_truth = line.split("ground_truths:", 1)
 
                 answer, contexts = chat(question)
                 # Combine and format context content
-                formatted_contexts = [doc.page_content.replace("\n", " .") for doc in contexts]
-
+                #formatted_contexts = [doc.page_content.replace("\n", " .") for doc in contexts]
+                print( ground_truth.lower(),answer.replace(".","").lower())
+                if ground_truth.lower() == answer.replace(".","").lower():
+                    passCount += 1 
+                else:
+                    failCount += 1
                 # Update the data_samples dictionary
-                data_samples['question'].append(question)
-                data_samples['contexts'].append(formatted_contexts)
-                data_samples['answer'].append(answer)
-                data_samples['ground_truths'].append([ground_truth])
+                #data_samples['question'].append(question)
+                #data_samples['contexts'].append(formatted_contexts)
+                #data_samples['answer'].append(answer)
+                #data_samples['ground_truths'].append([ground_truth])
 
     except FileNotFoundError:
         print("Error: eval_questions.txt file not found.")
         return
 
     # Convert to dataset and save
-    dataset = Dataset.from_dict(data_samples)
-    dataset.save_to_disk('eval_dataset')
+    #dataset = Dataset.from_dict(data_samples)
+    #dataset.save_to_disk('eval_dataset')
 
     # Optional: Print dataset for verification
-    print(dataset)
+    print(passCount,"/",passCount+failCount)
 
 
 def evaluate_rag():
@@ -105,9 +110,7 @@ def evaluate_rag():
     result = evaluate(
         loaded_dataset,
         metrics=[
-            context_precision,  # checks if ground truth relevant items are in retrieved context
             answer_relevancy,  # checks how relevant llm answer is to the question
-            context_recall,  # measures the extent to which the retrieved context aligns with the annotated answer
         ],
     )
     return result
@@ -149,13 +152,13 @@ def chat(query,EvaluationToggle=True):
 
 
 def main():
-    EvaluationToggle = False
+    EvaluationToggle = True
     # toggle between chatting and evaluation
     if EvaluationToggle:
         # Create evaluation dataset if it doesn't exist
         if not os.path.exists("eval_dataset"):
             create_eval_data_set()
-        print(evaluate_rag())
+        #print(evaluate_rag())
     else:
         while True:
             query = input("Enter your query (type 'exit' to quit): ")

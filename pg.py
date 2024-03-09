@@ -1,5 +1,5 @@
 import os
-os.environ["OPENAI_API_KEY"] = "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"
+os.environ["OPENAI_API_KEY"] = ""
 from langchain.vectorstores import Chroma
 from langchain.chat_models import ChatOpenAI
 from langchain.prompts import PromptTemplate
