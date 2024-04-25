@@ -1,14 +1,1 @@
-BankDetail: "a page detailing a bank account's connection with investment accounts.includes a notification indicates that the bank authentication is locked due to multiple incorrect attempts. It provides instructions for completing the authentication process, including calling for assistance, printing, and completing an Electronic Bank Transfer Form.
-A message that states that one or more of the user's Vanguard accounts is not authorized for use with this bank and directs the user to a specific section for more information. It mentions that any scheduled transactions associated with these accounts will not be processed until authorization issues are resolved.
-Bank Account Details are
-Bank account name,
-Routing number,
-Account number,
-Account Type,
-Account Owners,
-Bank account nickname,
-Date added,
-Accounts Authorized to Use This Bank,
-Accounts Not Authorized to Use This Bank,
-Scheduled Transactions That Use This Bank.
-There is also an option to "Delete bank account" from the platform."
+BankDetail: a page detailing a bank account's connection with investment accounts including a notification indicates that the bank authentication is locked due to multiple incorrect attempts. It provides instructions for completing the authentication process, including calling for assistance, printing, and completing an Electronic Bank Transfer Form. It also includes a message that states that one or more of the user's Vanguard accounts is not authorized for use with this bank and directs the user to a specific section for more information. It mentions that any scheduled transactions associated with these accounts will not be processed until authorization issues are resolved.The Bank Account Details areBank account name,Routing number,Account number,Account Type,Account Owners,Bank account nickname,Date added,Accounts Authorized to Use This Bank,Accounts Not Authorized to Use This Bank,Scheduled Transactions That Use This Bank.There is also an option to "Delete bank account" from the platform.

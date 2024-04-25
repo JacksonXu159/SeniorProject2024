@@ -11,6 +11,7 @@ from langchain.chains import LLMChain
 from langchain.chains.question_answering import load_qa_chain
 from langchain.memory import ConversationBufferMemory
 from ragas import evaluate
+import re
 from datasets import Dataset
 from ragas.llms import LangchainLLM
 from ragas.metrics import (
@@ -63,45 +64,29 @@ promptTwo = PromptTemplate(
 chainTwo = load_qa_chain(gpt_turbo, chain_type="stuff", verbose=False, prompt=promptTwo)
 
 def create_eval_data_set():
-    # Initialize a dictionary to hold data samples
-
     passCount = 0
     failCount = 0
-    data_samples = {
-        'question': [],
-        'ground_truths': [],
-        'answer': [],
-        #'contexts': []
-    }
+    count = 0
     try:
-        with open('eval_questions_v2.txt', 'r') as file:
+        with open('real_questions.txt', 'r') as file:
             for line in file:
+                count += 1
                 # Splitting the line into question and ground truth
                 question, ground_truth = line.split("ground_truths:", 1)
 
                 answer, contexts = chat(question)
-                # Combine and format context content
-                #formatted_contexts = [doc.page_content.replace("\n", " .") for doc in contexts]
-                print( ground_truth.lower(),answer.replace(".","").lower())
-                if ground_truth.lower() == answer.replace(".","").lower():
+                print(ground_truth.lower(), end='')
+                print( answer.replace(".","").lower())
+                print(count)
+                print("STOP")
+                if re.sub(r"\s+", "", ground_truth).lower() == re.sub(r"\s+", "", answer).replace(".","").lower():
                     passCount += 1 
                 else:
                     failCount += 1
-                # Update the data_samples dictionary
-                #data_samples['question'].append(question)
-                #data_samples['contexts'].append(formatted_contexts)
-                #data_samples['answer'].append(answer)
-                #data_samples['ground_truths'].append([ground_truth])
 
     except FileNotFoundError:
         print("Error: eval_questions.txt file not found.")
         return
-
-    # Convert to dataset and save
-    #dataset = Dataset.from_dict(data_samples)
-    #dataset.save_to_disk('eval_dataset')
-
-    # Optional: Print dataset for verification
     print(passCount,"/",passCount+failCount)
 
 
@@ -133,8 +118,6 @@ def chat(query,EvaluationToggle=True):
 
         matching_docs += unique_documents
 
-
-
     response = chainTwo(
         {
             "input_documents": matching_docs,
@@ -152,7 +135,7 @@ def chat(query,EvaluationToggle=True):
 
 
 def main():
-    EvaluationToggle = True
+    EvaluationToggle = False
     # toggle between chatting and evaluation
     if EvaluationToggle:
         # Create evaluation dataset if it doesn't exist

@@ -1,0 +1,128 @@
+What account number do I initiate a wire transfer to my Vanguard account? ground_truths: BankDetail
+How do I start a wire to my account? ground_truths: BankDetail
+How can my friend wire money to my account? ground_truths: BankDetail
+I need to wire money to my account. ground_truths: BankDetail
+What are the steps to set up a direct deposit into my Vanguard investment account? ground_truths: BankDetail
+How to setup a direct deposit in my investment account? ground_truths: BankDetail
+I need to make a direct deposit to my investment account. ground_truths: BankDetail
+How do I confirm the status of a pending bank transfer on Vanguard? ground_truths: BankDetail
+How to check the status of a pending bank transfer? ground_truths: BankDetail
+What is the status of a pending transfer to my account? ground_truths: BankDetail
+Can I manage multiple bank links within my Vanguard account, and if so, how? ground_truths: BankDetail
+How to manage multiple bank links of my account? ground_truths: BankDetail
+Can my account have multiple bank links? ground_truths: BankDetail
+How can I differentiate between my bank accounts when making a deposit to Vanguard? ground_truths: BankDetail
+How to choose from multiple accounts when I make a deposit? ground_truths: BankDetail
+What is the process for reporting an incorrect bank transaction on my Vanguard account? ground_truths: BankDetail
+How to report for an incorrect transaction on my account? ground_truths: BankDetail
+I need to report an invalid transaction. ground_truths: BankDetail
+How do I report a false transaction? ground_truths: BankDetail
+How do I update the banking information for automatic Vanguard fund purchases? ground_truths: BankDetail
+I need to update my banking information. ground_truths: BankDetail
+Can I link a foreign bank account to my Vanguard account, and what are the steps? ground_truths: BankDetail
+How to link a foreign account to my vg account? ground_truths: BankDetail
+How to link an offshore account to my account? ground_truths: BankDetail
+Is it possible to link a bank account outside of United States to my vanguard account? ground_truths: BankDetail
+Can my family members view my account details through their accounts? ground_truths: BankDetail
+What is my account number? ground_truths: BankDetail
+Where do I find my account number? ground_truths: BankDetail
+Who are the account owners for my account? ground_truths: BankDetail
+Who are the people that can access my account? ground_truths: BankDetail
+How can I find if my account is locked? ground_truths: BankDetail
+How much money do I have? ground_truths: Balance
+What is my balance? ground_truths: Balance
+How much do I have in my account? ground_truths: Balance
+I want to change my address on my Vanguard account for receiving documents, how do I do it? ground_truths: ChangeAddress
+How do I change my address on my account? ground_truths: ChangeAddress
+How can I confirm that Vanguard has updated my address in their records? ground_truths: ChangeAddress
+I just moved my places what do I need to do? ground_truths: ChangeAddress
+How can I set up alerts for order executions within my Vanguard account? ground_truths: OrderDetail
+Can I review the payment method used for past orders on my Vanguard account? ground_truths: OrderDetail
+What was the payment form used for my latest order? ground_truths: OrderDetail
+How do I check the margin impact of a pending order in my Vanguard brokerage account? ground_truths: OrderDetail
+Can I subscribe to a feed of real-time order updates for my Vanguard trades? ground_truths: OrderDetail
+What information does Vanguard provide about the settlement period of my recent orders? ground_truths: OrderDetail
+How do I check the margin impact of a pending order in my Vanguard brokerage account? ground_truths: OrderDetail
+Can I subscribe to a feed of real-time order updates for my Vanguard trades? ground_truths: OrderDetail
+What is the order number of my most recent order? ground_truths: OrderDetail
+Do I have a pending order? ground_truths: OrderDetail
+Where do I find my Vanguard account's year-to-date earnings summary? ground_truths: Dashboard
+Where can I find how my investment is being utilized? ground_truths: Dashboard
+Can I see a currency breakdown of my holdings in my Vanguard international accounts? ground_truths: Dashboard
+Can I view the gains and losses on my Vanguard investments? ground_truths: Dashboard
+Where do I view my gains and losses? ground_truths: Dashboard
+I want to see my profit and losses, where do I see it? ground_truths: Dashboard
+How can I compare my account’s performance over time? ground_truths: Dashboard
+How do I access the tax-loss harvesting tool on my Vanguard dashboard? ground_truths: Dashboard
+Is there a way to receive a dashboard overview report of my Vanguard accounts via email? ground_truths: Dashboard
+How can I set up a personalized risk assessment profile on my Vanguard dashboard? ground_truths: Dashboard
+Can I set up a custom alert for when my Vanguard account reaches a certain balance milestone? ground_truths: Dashboard
+Where on the dashboard can I access documents related to my annual account review? ground_truths: Dashboard
+How can I customize the Vanguard dashboard to show my preferred investment reports? ground_truths: Dashboard
+Can I set up a recurring investment transaction on Vanguard and where can I monitor these? ground_truths: Transactions
+How do I view my recent transactions? ground_truths: Transactions
+Show me my last 5 transactions. ground_truths: Transactions
+Where can I find all of my account’s transactions? ground_truths: Transactions
+I want to view filtered transaction of certain types only, where do I find it? ground_truths: Transactions
+Show me the transactions of my account. ground_truths: Transactions
+How do I inittiate a wire transfre to my Vangaurd accunt? ground_truths: BankDetail
+Wat are the steps to set up a direc deposit into my Vangaurd invesment acount? ground_truths: BankDetail
+How do I confirme the status of a pendin bank transfer on Vangaurd? ground_truths: BankDetail
+Can I manag multiple bank links within my Vangaurd accunt, and if so, how? ground_truths: BankDetail
+How can I diferentiate between my bank acounts when making a deposit to Vangaurd? ground_truths: BankDetail
+What is the proccess for reporting an incorrct bank transaction on my Vangaurd account? ground_truths: BankDetail
+How do I updat the banking information for automatic Vangaurd fund purchases? ground_truths: BankDetail
+Can I link a foriegn bank acount to my Vangaurd account, and what are the steps? ground_truths: BankDetail
+I have 2 bank accounts, can they both be linked to my vanguard account? ground_truths: BankDetail
+My work transferred me to a different location, what should i do? ground_truths:ChangeAddress
+How can I confirm that Vangaurd has updatd my address in their records? ground_truths:ChangeAddress
+Can I submit an international adress change online for my Vangaurd account? ground_truths: ChangeAddress
+What are Vangaurd's policys on adress changes for accounts with a POA (Power of Attorney)? ground_truths: ChangeAddress
+How do I set up mail forwarding for my Vangaurd account documents when I change adresses? ground_truths: ChangeAddress
+Where can I chance my location on the account? ground_truths: ChangeAddress
+I am moving into a new location, how can I change my location on the account? ground_truths: ChangeAddress
+I just moved how do i update my address, do i have to update my address when i move? ground_truths: ChangeAddress
+Please show me how to change the location on my account. ground_truths: ChangeAddress
+Where do I find detialed tax implications for a recent Vangaurd order? ground_truths: OrderDetail
+Can I review the payment method used for past orders on my Vangaurd account? ground_truths: OrderDetail
+What information does Vangaurd provide about the settlement period of my recent orders? ground_truths: OrderDetail
+How do I check the margin impact of a pending order in my Vangaurd brokerage account? ground_truths: OrderDetail
+Can I subscribe to a feed of real-time order updats for my Vangaurd trades? ground_truths: OrderDetail
+What was the amount I paid on my latest order? ground_truths: OrderDetail
+What is the status on my latest order? ground_truths: OrderDetail
+What did i use to pay for the last transaction? ground_truths: OrderDetail
+How did i pay for the last transaction? ground_truths: OrderDetail
+Show me the receipt of my last order from today. ground_truths: OrderDetail
+Can I see a currency breakdown of my holdings in my Vangaurd international acounts? ground_truths: Balance
+How do I reconcile my Vangaurd account balances with my personal finance software? ground_truths: Balance
+Can I view the unrealized gains and losses on my Vangaurd investments? ground_truths: Dashboard
+What tools does Vangaurd offer to help me understand the balance trends over the past few years? ground_truths: Dashboard
+How can I compare the balance growth of my Vangaurd account to benchmark indices? ground_truths: Dashboard
+What is my balance? ground_truths: Balance
+How much do i have left? ground_truths: Balance
+How much money do I have? ground_truths: Balance
+How much is in my account? ground_truths: Balance
+Is there a way to recieve a dashboard overview report of my Vangaurd accounts via email? ground_truths: Dashboard
+How can I set up a personalized risk assesment profile on my Vangaurd dashboard? ground_truths: Dashboard
+Can I set up a custom alrt for when my Vangaurd account reaches a certain balance milestone? ground_truths: Dashboard
+Where on the dashboard can I acces documents related to my annual account review? ground_truths: Dashboard
+How can I customize the Vangaurd dashboard to show my prefered investment reports? ground_truths: Dashboard
+Have I made any profit this year? ground_truths: Dashboard
+Are my investments getting me any profit? ground_truths: Dashboard
+What is the status on my investments? ground_truths: Dashboard
+What is my returns? ground_truths: Dashboard
+How much returns do I have in %? ground_truths: Dashboard
+How am i doing compared to the benchmark? ground_truths: Dashboard
+How am i doing compared to average users? ground_truths: Dashboard
+How are my investments doing? ground_truths: Dashboard
+Where can I find a summery of all dividends reinvested in my Vangaurd accounts this year? ground_truths: Transactions
+How do I consolidate transaction reports from multiple Vangaurd accounts for tax purposes? ground_truths: Transactions
+Can I filter my Vangaurd transaction history by the asset clas or sector? ground_truths: Transactions
+How do I track the status of a pending reinvestment plan transaction on my Vangaurd account? ground_truths: Transactions
+What is the process to set up and monitor systematic withdrawal transactions on Vangaurd? ground_truths: Transactions
+I want to see my history. ground_truths: Transactions
+Give me a list of my transactions. ground_truths: Transactions
+Show me the transactions of yesterday? ground_truths: Transactions
+List of recent transactions. ground_truths: Transactions
+What did i spend on? ground_truths: Transactions
+Show me all my transactions please. ground_truths: Transactions
