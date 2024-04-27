@@ -1,0 +1,3 @@
+InvestmentPerformance:A detailed breakdown of a particular investment, more detailed than is listed in the regular dashboard.
+Includes breakdown of total returns, tax implications of the investment strategy, and other notes pertaining to that particular class of investment.
+Also includes relevant benchmarks to assess performance.
