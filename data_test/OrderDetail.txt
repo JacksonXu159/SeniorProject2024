@@ -1,12 +1,24 @@
-OrderDetail:the layout is structured to provide users with a clear overview of a specific order, highlighting various informational fields:
+OrderDetail:the layout of the Order Detail page is structured to provide users with an overview of a specific order.
+The page is split up into two sides, the left side provides information on the details of the order,
+and the right side provides banking information of the bank the funds are withdrawn from or deposited to.
 
-Order Number: A field likely for a unique identifier for the order.
-Status: Indicates the current stage of the order
-Transaction Type: This field would specify the nature of the transaction (e.g., buy, sell, transfer).
-Dollars/Shares: Reflects the quantity involved in the transaction.
+Order Detail Fields
+Order Number: A number that uniquely identifies the order
+Status: Indicates the current status of the order, whether it be in-progress, completed, etc.
+Transaction Type: This field specifies the nature of the transaction (e.g., buy, sell, transfer)
+Dollars/Shares: Reflects the quantity of shares involved in the transaction
 Symbol: The ticker or code for the investment product
 Name: Provides the name of the fund or investment
-Transaction Method: Specifies how the transaction is being processed.
-Additional fields are available for entering or viewing details related to funding methods, principal amounts, bank routing and account numbers, the name on the bank account, and the bank itself, among others.
+Transaction Method: Specifies how the transaction is being processed. For example, most orders are initiated from an online portal, and the field would read "WEB"
 
-The interface is designed for functionality, allowing the user to interact with and understand the progress and specifics of their financial transactions. With features such as quote retrieval, print options, and navigational arrows for moving between orders, the page is evidently tailored for active and direct management of investment activities.
+Banking Information Fields
+Principle Amount: The amount of money to be drawn/deposited
+Funding Method: The method in which the money is transferred; WIRE, ACH, etc.
+Bank Routing Number: The routing number of the bank
+Bank Account Number: The bank account number
+Bank Account Type: The type of bank account (Savings, Checking)
+Name on Bank Account: Name of account holder
+Bank Name: Name of bank
+Bank Phone Number: Phone number of bank
+
+Additional fields are available on the bank information side for beneficiary information.
