@@ -1,8 +1,9 @@
-Dashboard:is a user-friendly interface designed for personal investors to monitor and manage their investment portfolio. It includes several sections.
-The main overview, including quick access to the portfolio's total value and the user's last login information.
-Detailed information about the user's accounts, including balances and rates of return.
-A graphical representation of the account's performance over time, including investment returns.
-A visual and numerical representation of the distribution of assets between different categories, such as stocks and bonds, along with the targets for each category.
-A log of the latest activities within the account, specifically dividend receipts in this case.
+Dashboard:is an interface designed for personal investors to monitor and manage their investment portfolio.
+There are multiple tabs, each providing different portfolio information.
+The tabs are: dashboard, balances, holdings, activity, and portfolio watch.
+
+The dashboard tab provides a high-level overview of the user's portfolio. It includes an accounts section detailing balance and rate of return.
+There is a graph section showing performance over a specified date range, as well as a section showing the portfolio composition (the percentage weights of different asset classes).
+There is a brief summary on recent transactions.
 
 https://vanguard/Dashboard/ 
