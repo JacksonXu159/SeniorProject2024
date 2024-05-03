@@ -1,1 +1,7 @@
-ChangeAddress: Allows user to change the home address or location listed on their account.
+ChangeAddress: This page allows the user to modify their address and contact preferences.
+
+The top section is the Addresses section, which allows the user to specify their home address
+as well as their primary mailing address.
+
+The bottom section is the Phones section, which allows the user to set up their security codes,
+text alerts, and contact preferences.
