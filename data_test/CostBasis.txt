@@ -1,0 +1,1 @@
+CostBasis: This page shows a list of the user's investments, each entry showing the cost basis (holding cost), both as a percentage, and as a dollar value.
