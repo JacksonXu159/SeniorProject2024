@@ -1,0 +1,2 @@
+CancelOrder: This page gives the user an overview of the order as well as the option to cancel their order.
+If they decide to cancel, the page will update to show the status of the order cancellation (success, failure, etc.).
