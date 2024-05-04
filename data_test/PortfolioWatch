@@ -1,0 +1,5 @@
+PortfolioWatch: This page is simply a graphical representation of the user's portfolio.
+It shows a bar chart detailing their asset mix between stocks, bonds, and other investment classes.
+As well as showing a pie chart analyzing their stock mix (domestic/international).
+This page also has a dropdown menu with portfolio alerts, and can also be configured to show information
+most relevant to the user.
