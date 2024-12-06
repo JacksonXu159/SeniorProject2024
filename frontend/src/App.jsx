@@ -1,16 +1,19 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import { Box, Button, Typography } from '@mui/material'
+import { ThemeProvider, CssBaseline } from "@mui/material";
+import theme from "./utils/theme";
+
+import Dashboard from "./components/Dashboard";
+import Navbar from "./components/Navbar";
 
 function App() {
   return (
-   <Box sx={{color: 'black', backgroundColor: 'white'}}>
-    <Typography variant='h1'>Hello world!</Typography>
-    <Button variant='contained' color='primary'>Hi there</Button>
-   </Box>
-  )
+    <div className="App">
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Navbar />
+        <Dashboard />
+      </ThemeProvider>
+    </div>
+  );
 }
 
-export default App
+export default App;
