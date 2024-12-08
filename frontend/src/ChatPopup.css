@@ -1,6 +1,7 @@
 .cs-message--incoming .cs-message__content {
     color: white;
-    background-color: #cc0d33ce;
+    background-color: #c8042c;
+    opacity: 0.5;
     border-radius: 0 0.7em 0.7em 0;
 }
 
