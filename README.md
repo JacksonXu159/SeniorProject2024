@@ -5,9 +5,9 @@ This project focuses on replacing traditional financial platforms that have rich
 The goal is to allow clients to ask questions and receive answers directly from their financial data. This approach aims to improve user experience and reduce dependency on live support agents.
 
 ## Features
--**Conversational Interface**: Clients can ask questions in natural language and receive clear, detailed answers.
--**Personalized Insights**: Provides tailored answers based on user information.
--**Efficiency**: Reduces time spent navigating websites by focusing on delivering answers quickly.
+* **Conversational Interface**: Clients can ask questions in natural language and receive clear, detailed answers.
+* **Personalized Insights**: Provides tailored answers based on user information.
+* **Efficiency**: Reduces time spent navigating websites by focusing on delivering answers quickly.
 
 
 ## Setup
