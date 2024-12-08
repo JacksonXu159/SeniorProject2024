@@ -3,17 +3,18 @@ import theme from "./utils/theme";
 
 import Dashboard from "./components/Dashboard";
 import Navbar from "./components/Navbar";
-
+import ChatPopUp from "./ChatPopUp";
 function App() {
-  return (
-    <div className="App">
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <Navbar />
-        <Dashboard />
-      </ThemeProvider>
-    </div>
-  );
+    return (
+        <div className="App">
+            <ThemeProvider theme={theme}>
+                <CssBaseline />
+                <Navbar />
+                <Dashboard />
+            </ThemeProvider>
+            <ChatPopUp />
+        </div>
+    );
 }
 
 export default App;
