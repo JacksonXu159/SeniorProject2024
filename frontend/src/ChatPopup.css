@@ -1,0 +1,37 @@
+.cs-message--incoming .cs-message__content {
+    color: white;
+    background-color: #cc0d33ce;
+    border-radius: 0 0.7em 0.7em 0;
+}
+
+.cs-message--outgoing .cs-message__content {
+    color: white;
+    background-color: #c8042c;
+    border-radius: 0 0.7em 0.7em 0;
+}
+
+.cs-main-container {
+    border: solid 2px #c8042c;
+}
+.cs-message-input__content-editor-wrapper {
+    background-color: #ffffff;
+    border: solid 1px #c8042c;
+}
+.cs-message-input__content-editor {
+    background-color: #ffffff;
+}
+
+.cs-typing-indicator__text {
+    color: #c8042c;
+}
+
+.cs-typing-indicator__dot {
+    color: #c8042c;
+    background-color: #c8042c;
+}
+.cs-button--send {
+    color: #c8042c;
+}
+.cs-button--attachment {
+    color: #c8042c;
+}
