@@ -3,7 +3,7 @@ import theme from "./utils/theme";
 
 import Dashboard from "./components/Dashboard";
 import Navbar from "./components/Navbar";
-import ChatPopUp from "./ChatPopUp";
+import ChatPopUp from "./components/ChatPopUp";
 function App() {
     return (
         <div className="App">
