@@ -1,27 +1,33 @@
-import OpenAI from "openai";
+import { useState } from "react";
+import axios from "axios";
 
-const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY
+const url = "http://localhost:8000/message/"
 
-const useGenAI = async (content) => {
-    const openai = new OpenAI({
-        apiKey: OPENAI_API_KEY
-    });
-    
-    const completion = await openai.chat.completions.create({
-        model: "gpt-4o-mini",
-        messages: [
-            { role: "system", content: "You are a financial assistant" },
-            {
-                role: "user",
-                content: "content",
-            },
-        ],
-    });
-    
-    console.log(completion.choices[0].message);
-    return completion.choices[0].message
-}
+const useGenAI = () => {
+    const [data, setData] = useState(null);
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false);
 
-useGenAI("Hi, what is your role?")
+    const sendMessage = async (userMessage) => {
+        setLoading(true);
+        setError(null);
+        
+        const messageJSON = { message: userMessage };
+        
+        try {
+            const response = await axios.post(url, messageJSON);
+            setData(response.data);
+            return response.data;
+        } catch (err) {
+            setError(err);
+            console.error(err);
+            return null;
+        } finally {
+            setLoading(false);
+        }
+    };
 
-export default useGenAI
+    return { sendMessage, data, error, loading };
+};
+
+export default useGenAI;
