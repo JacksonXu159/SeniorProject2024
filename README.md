@@ -13,4 +13,10 @@ The goal is to allow clients to ask questions and receive answers directly from 
 ## Setup
 1. Clone the repository.
 2. Install the necessary requirements.
+    BACKEND:
+        - FastAPI
+        - OpenAI
+    FRONTEND:
+        a. cd into frontedn
+        b. run ```npm i```
 3. Run the application locally.
