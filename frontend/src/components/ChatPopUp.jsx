@@ -62,15 +62,15 @@ function ChatPopUp({}) {
   };
 
   const handleSend = async (message) => {
+    setTyping(true);
     const response = await sendMessage(message);
-
+    console.log(response)
     const newUserMessage = {
       message: message,
       sender: "user",
       direction: "outgoing",
     };
 
-    // Add bot response if we got one
     if (response) {
       const botResponse = {
         message: response.message,
@@ -82,7 +82,7 @@ function ChatPopUp({}) {
       setMessages([...messages, newUserMessage]);
     }
 
-    setTyping(loading);
+    setTyping(false);
   };
 
   return (
