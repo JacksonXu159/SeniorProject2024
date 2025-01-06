@@ -11,12 +11,12 @@ The goal is to allow clients to ask questions and receive answers directly from 
 
 
 ## Setup
-1. Clone the repository.
-2. Install the necessary requirements.
-    BACKEND:
-        - FastAPI
-        - OpenAI
-    FRONTEND:
-        a. cd into frontedn
-        b. run ```npm i```
-3. Run the application locally.
+1. Clone repo
+2. Cd into ./backend
+3. Start a python virtual env ```python -m venv ./myvenv```
+4. Acitvate venv ```./myvenv/Scripts/activate```
+5. Install dependencies ```pip install -r requirements.txt```
+6. Run ```fastapi dev .\server.py``` to start server
+7. In a different terminal, cd into ./frontend and install dependencies ```npm i ```
+8. Run ```npm run dev```
+
