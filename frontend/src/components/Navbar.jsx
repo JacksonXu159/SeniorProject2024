@@ -9,10 +9,10 @@ import { Link, Route, Routes } from "react-router-dom";
 
 const Navbar = () => {
   const menuItems = [
-    { page: "Dashboard", 'route': '/' },
-    { page: "Account", 'route': '/account' },
-    { page: "Services", 'route': '/services' },
-    { page: "Settings", 'route': '/settings' },
+    { page: "Dashboard", route: "" },
+    { page: "Account", route: "/account" },
+    { page: "Services", route: "/services" },
+    { page: "Settings", route: "/settings" },
   ];
 
   return (
@@ -39,7 +39,9 @@ const Navbar = () => {
           <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2 }}>
             {menuItems.map((item) => (
               <Button key={item} color="primary">
-                {item.page}
+                <Link to={item.route}>
+                  {item.page}
+                </Link>
               </Button>
             ))}
           </Box>
