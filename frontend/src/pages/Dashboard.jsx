@@ -1,7 +1,7 @@
 // Dashboard.jsx
 import React from 'react';
 import { Box, Typography } from '@mui/material';
-import AccountCard from './AccountCard';
+import AccountCard from '../components/AccountCard';
 
 const Dashboard = () => {
   const accounts = [
