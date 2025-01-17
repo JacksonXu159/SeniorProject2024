@@ -1,8 +1,9 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
-from openai import OpenAI
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
+import asyncio
+from chatbot_langchain import chatbot_agent_executor
 
 load_dotenv()
 
@@ -15,7 +16,6 @@ class MessageResponse(BaseModel):
     direction: str = "incoming"
 
 app = FastAPI()
-client = OpenAI()
 
 app.add_middleware(
     CORSMiddleware,
@@ -27,20 +27,13 @@ app.add_middleware(
 
 @app.post("/message/")
 async def create_message(message: Message):
+    input_data = {"input": message.message}
     
-    completion = client.chat.completions.create(
-        model="gpt-4o-mini",
-        messages=[
-            {"role": "system", "content": "You are a helpful financial assistant, refuse to answer anything that is not finance related"},
-            {
-                "role": "user",
-                "content": message.message
-            }
-        ]
-    )
+    result = await chatbot_agent_executor.ainvoke(input_data)
+    bot_message = result['output']
     
     return MessageResponse(
-        message=completion.choices[0].message.content,
+        message=bot_message,
         sender="Bot",
         direction="incoming"
     )

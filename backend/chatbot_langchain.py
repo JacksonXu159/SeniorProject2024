@@ -1,4 +1,5 @@
 import os
+import asyncio
 from langchain.agents import Tool
 from langchain_openai import ChatOpenAI
 from langchain.agents import (
@@ -53,3 +54,11 @@ chatbot_agent_executor = AgentExecutor(
     return_intermediate_steps=True,
     verbose=True,
 )
+
+async def main():
+    input_data = {"input": "What are bonds?"}
+    result = await chatbot_agent_executor.ainvoke(input_data)
+    print(result)
+
+if __name__ == "__main__":
+    asyncio.run(main())
