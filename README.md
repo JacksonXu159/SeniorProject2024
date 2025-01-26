@@ -1,7 +1,7 @@
 # Thinking Beyond Rich User Interfaces - Senior Project 2024
 
 ## Overview
-This project focuses on replacing traditional financial platforms that have rich, detailed user interfaces with a google-like search interface/conversational AI tool. 
+This project focuses on replacing traditional financial platforms that have rich, detailed user interfaces with a Google-like search interface/conversational AI tool. 
 The goal is to allow clients to ask questions and receive answers directly from their financial data. This approach aims to improve user experience and reduce dependency on live support agents.
 
 ## Features
