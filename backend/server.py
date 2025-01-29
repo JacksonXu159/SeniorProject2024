@@ -25,9 +25,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.get("/")
 @app.post("/")
 async def root():
-        return {"message": "Welcome to Vanguard APP!"}
+    return {"message": "Welcome to Vanguard APP!"}
 
 @app.post("/message/")
 async def create_message(message: Message):
