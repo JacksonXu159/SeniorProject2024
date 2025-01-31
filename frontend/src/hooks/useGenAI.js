@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 
-const url = "http://localhost:8000/message/"
+const url = "http://44.193.233.90/message/"
 
 const useGenAI = () => {
     const [data, setData] = useState(null);
