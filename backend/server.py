@@ -4,6 +4,14 @@ from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 import asyncio
 from chatbot_langchain import chatbot_agent_executor
+from sqlalchemy.orm import Session
+from fastapi import Depends
+from database import Base, engine, get_db
+import os
+
+database_url = os.getenv("DATABASE_URL")
+Base.metadata.create_all(bind=engine)
+
 
 load_dotenv()
 
@@ -26,9 +34,11 @@ app.add_middleware(
 )
 
 @app.get("/")
-@app.post("/")
-async def root():
-    return {"message": "Welcome to Vanguard APP!"}
+# @app.post("/")
+async def root(db: Session = Depends(get_db)):
+    result = db.execute("SELECT NOW()").fetchone()
+    return {"message": "Welcome to Vanguard APP!", "current_time": result[0]}
+
 
 @app.post("/message/")
 async def create_message(message: Message):
