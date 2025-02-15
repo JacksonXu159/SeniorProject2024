@@ -19,19 +19,6 @@ const AccountCard = ({ account }) => (
     <Typography variant="h4" color="primary.main">
       {account.value || '-'}
     </Typography>
-    <Typography variant="body2" color="text.secondary">
-      Account number: {account.account}
-    </Typography>
-    {account.status && (
-      <Typography variant="body2" color="text.secondary">
-        {account.status}
-      </Typography>
-    )}
-    {account.description && (
-      <Typography variant="body2" color="primary.main" sx={{ mt: 1 }}>
-        {account.description}
-      </Typography>
-    )}
   </Box>
 );
 
