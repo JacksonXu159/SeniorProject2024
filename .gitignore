@@ -1,2 +1,3 @@
-myenv/
+myvenv/
 .env
+*.pem
