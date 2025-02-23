@@ -13,7 +13,8 @@ import {
   MessageSquare,
   Scale,
   Phone,
-  LogOut
+  LogOut,
+  Users
 } from "lucide-react";
 import {
   Box,
@@ -25,18 +26,30 @@ import {
   ListItemIcon,
   ListItemText,
   Divider,
-  Avatar
+  Avatar,
+  Dialog,
+  DialogTitle,
+  DialogContent,
 } from "@mui/material";
 
 const Account = () => {
-  const userData = {
-    firstName: "John",
-    lastName: "Johnson",
-    email: "john.johnson@example.com",
-    accountId: "VG-7849261",
-    riskTolerance: "Medium",
-    maritalStatus: "Single"
-  };
+  const [switchAccountOpen, setSwitchAccountOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState("John Johnson");
+
+  const allUsers = [
+    { name: "John Johnson", id: "VG-7849261", risk: "Medium", status: "Single" },
+    { name: "Michael Williams", id: "VG-7849262", risk: "Medium", status: "Divorced" },
+    { name: "Christina Davis", id: "VG-7849263", risk: "Medium", status: "Married" },
+    { name: "Emily Brown", id: "VG-7849264", risk: "Medium", status: "Single" },
+    { name: "Katie Rodriguez", id: "VG-7849265", risk: "Medium", status: "Married" },
+    { name: "David Garcia", id: "VG-7849266", risk: "High", status: "Divorced" },
+    { name: "Alex Williams", id: "VG-7849267", risk: "Low", status: "Single" },
+    { name: "John Smith", id: "VG-7849268", risk: "High", status: "Divorced" },
+    { name: "Jane Brown", id: "VG-7849269", risk: "High", status: "Married" },
+    { name: "Laura Davis", id: "VG-7849270", risk: "Medium", status: "Single" }
+  ];
+
+  const currentUser = allUsers.find(user => user.name === selectedUser);
 
   const menuItems = {
     Account: [
@@ -59,8 +72,9 @@ const Account = () => {
     ],
   };
 
-  const handleLogout = () => {
-    console.log("Logging out...");
+  const handleSwitchAccount = (userName) => {
+    setSelectedUser(userName);
+    setSwitchAccountOpen(false);
   };
 
   return (
@@ -94,14 +108,14 @@ const Account = () => {
                   fontSize: "1.5rem"
                 }}
               >
-                {userData.firstName[0]}{userData.lastName[0]}
+                {currentUser.name.split(" ").map(n => n[0]).join("")}
               </Avatar>
               <Box>
                 <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                  {userData.firstName} {userData.lastName}
+                  {currentUser.name}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  {userData.accountId}
+                  {currentUser.id}
                 </Typography>
               </Box>
             </Paper>
@@ -142,9 +156,9 @@ const Account = () => {
 
             <Button
               variant="outlined"
-              color="error"
-              startIcon={<LogOut size={20} />}
-              onClick={handleLogout}
+              color="primary"
+              startIcon={<Users size={20} />}
+              onClick={() => setSwitchAccountOpen(true)}
               fullWidth
               sx={{ 
                 mt: 2,
@@ -154,7 +168,7 @@ const Account = () => {
                 fontSize: "1rem"
               }}
             >
-              Log Out
+              Switch Account
             </Button>
           </Box>
 
@@ -177,24 +191,16 @@ const Account = () => {
                     Full Name
                   </Typography>
                   <Typography variant="body1">
-                    {userData.firstName} {userData.lastName}
+                    {currentUser.name}
                   </Typography>
                 </Box>
                 <Divider />
                 
                 <Box>
                   <Typography variant="subtitle2" color="text.secondary">
-                    Email Address
-                  </Typography>
-                  <Typography variant="body1">{userData.email}</Typography>
-                </Box>
-                <Divider />
-
-                <Box>
-                  <Typography variant="subtitle2" color="text.secondary">
                     Account ID
                   </Typography>
-                  <Typography variant="body1">{userData.accountId}</Typography>
+                  <Typography variant="body1">{currentUser.id}</Typography>
                 </Box>
                 <Divider />
 
@@ -202,7 +208,7 @@ const Account = () => {
                   <Typography variant="subtitle2" color="text.secondary">
                     Risk Tolerance
                   </Typography>
-                  <Typography variant="body1">{userData.riskTolerance}</Typography>
+                  <Typography variant="body1">{currentUser.risk}</Typography>
                 </Box>
                 <Divider />
 
@@ -210,13 +216,53 @@ const Account = () => {
                   <Typography variant="subtitle2" color="text.secondary">
                     Marital Status
                   </Typography>
-                  <Typography variant="body1">{userData.maritalStatus}</Typography>
+                  <Typography variant="body1">{currentUser.status}</Typography>
                 </Box>
               </Box>
             </Paper>
           </Box>
         </Box>
       </Box>
+
+      <Dialog 
+        open={switchAccountOpen} 
+        onClose={() => setSwitchAccountOpen(false)}
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle sx={{ fontWeight: 600 }}>
+          Switch Account
+        </DialogTitle>
+        <DialogContent>
+          <List>
+            {allUsers.map((user) => (
+              <ListItem
+                key={user.id}
+                onClick={() => handleSwitchAccount(user.name)}
+                sx={{ 
+                  cursor: "pointer",
+                  borderRadius: 1,
+                  mb: 1,
+                  backgroundColor: user.name === selectedUser ? "#f0f7ff" : "transparent",
+                  "&:hover": {
+                    backgroundColor: "#f5f5f5"
+                  }
+                }}
+              >
+                <ListItemIcon>
+                  <Avatar sx={{ bgcolor: "#1976d2" }}>
+                    {user.name.split(" ").map(n => n[0]).join("")}
+                  </Avatar>
+                </ListItemIcon>
+                <ListItemText 
+                  primary={user.name}
+                  secondary={`ID: ${user.id} • Risk: ${user.risk}`}
+                />
+              </ListItem>
+            ))}
+          </List>
+        </DialogContent>
+      </Dialog>
     </Box>
   );
 };
