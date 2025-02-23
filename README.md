@@ -16,7 +16,7 @@ The goal is to allow clients to ask questions and receive answers directly from 
 3. Start a python virtual env ```python -m venv ./myvenv```
 4. Acitvate venv ```./myvenv/Scripts/activate```
 5. Install dependencies ```pip install -r requirements.txt```
-6. Run ```fastapi dev .\server.py``` to start server
+6. Run ```uvicorn server:app --reload``` to start server
 7. In a different terminal, cd into ./frontend and install dependencies ```npm i ```
 8. Run ```npm run dev```
 
