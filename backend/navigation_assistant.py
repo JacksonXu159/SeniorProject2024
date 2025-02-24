@@ -15,6 +15,7 @@ PGHOST = os.getenv("PGHOST")
 PGDATABASE = os.getenv("PGDATABASE")
 PGUSER = os.getenv("PGUSER")
 PGPASSWORD = os.getenv("PGPASSWORD")
+ENDPOINT = os.getenv('ENDPOINT')
 
 conn = psycopg2.connect(
     host=PGHOST,
@@ -23,6 +24,7 @@ conn = psycopg2.connect(
     password=PGPASSWORD,
     port=5432,
     sslmode="require",
+    options=f"endpoint={ENDPOINT}"  # Fixes the SNI error
 )
 cursor = conn.cursor()
 

@@ -6,5 +6,6 @@ python-dotenv==1.0.0
 pydantic
 langchain
 langchain_openai
-psycopg2
 scikit-learn
+nltk
+psycopg2-binary
