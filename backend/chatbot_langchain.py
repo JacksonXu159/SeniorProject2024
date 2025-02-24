@@ -34,13 +34,13 @@ tools = [
         - portfolios (query with 'portfolios')
         - risk tolerance (query with 'risk tolerance')"""
     ),
-    Tool(
-        name="Consultant",
-        func=assistant_chain.invoke,
-        description="""Useful when you need to answer general finance-related questions. 
-        Not useful for any data or user-specific questions such as account balance, statements,
-        user's investments, etc."""
-    ),
+    # Tool(
+    #     name="Consultant",
+    #     func=assistant_chain.invoke,
+    #     description="""Useful when you need to answer general finance-related questions. 
+    #     Not useful for any data or user-specific questions such as account balance, statements,
+    #     user's investments, etc."""
+    # ),
     Tool(
         name="UserServicesLookup",
         func=lambda query: user_services_agent_func(tmpID, query),
@@ -54,7 +54,7 @@ tools = [
     Tool(
         name="NavAndFaq",
         func=lambda query: rag_and_nav_agent(query, 0.5),
-        description="""User for handling queries related where services are located or finace related questions.
+        description="""Useful for handling questions about where things are located and general finance-related questions.
         Examples:
         - Where are my transactions?
         - What are stocks?
