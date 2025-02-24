@@ -19,6 +19,8 @@ from agents.assistant import assistant_chain
 
 from agents.rag_general_info import user_data_agent_func, user_services_agent_func
 
+from navigation_assistant import rag_and_nav_agent
+
 CHATBOT_AGENT_MODEL = os.getenv("CHATBOT_AGENT_MODEL")
 tmpID = "5e655314-c264-4999-83ad-67c43cc6db5b"
 
@@ -49,6 +51,15 @@ tools = [
         - Removing Services
         """
     ),
+    Tool(
+        name="NavAndFaq",
+        func=lambda query: rag_and_nav_agent(query, 0.5),
+        description="""User for handling queries related where services are located or finace related questions.
+        Examples:
+        - Where are my transactions?
+        - What are stocks?
+        """
+    )
 ]
 chatbot_agent_prompt = ChatPromptTemplate.from_messages(
     [
