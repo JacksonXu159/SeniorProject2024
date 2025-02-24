@@ -17,20 +17,39 @@ from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 
 from agents.assistant import assistant_chain
 
+from agents.rag_general_info import user_data_agent_func, user_services_agent_func
+
 CHATBOT_AGENT_MODEL = os.getenv("CHATBOT_AGENT_MODEL")
+tmpID = "5e655314-c264-4999-83ad-67c43cc6db5b"
 
 tools = [
     Tool(
+        name="UserDataLookup",
+        func=lambda query: user_data_agent_func(tmpID, query),
+        description="""Useful for retrieving:
+        - balance (query with 'balance')
+        - marital status (query with 'marital status')
+        - portfolios (query with 'portfolios')
+        - risk tolerance (query with 'risk tolerance')"""
+    ),
+    Tool(
         name="Consultant",
         func=assistant_chain.invoke,
-        description="""Useful when you need to answer general finance related questions. 
-        not useful for any data or user specific questions such as account balance, statements,
-        user's investments and etc. Pass the entire question as input to the tool. For intance,
-        if the question is "What are stocks and how they work?", the input should be "What are stocks and how they work?"
+        description="""Useful when you need to answer general finance-related questions. 
+        Not useful for any data or user-specific questions such as account balance, statements,
+        user's investments, etc."""
+    ),
+    Tool(
+        name="UserServicesLookup",
+        func=lambda query: user_services_agent_func(tmpID, query),
+        description="""User for handling queries related to services or the services the user has.
+        Examples:
+        - List services
+        - Adding Services
+        - Removing Services
         """
-    )
+    ),
 ]
-
 chatbot_agent_prompt = ChatPromptTemplate.from_messages(
     [
         ("system", "You are a helpful chatbot assistant"),
