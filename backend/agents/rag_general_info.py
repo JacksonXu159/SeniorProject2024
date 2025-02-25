@@ -99,26 +99,6 @@ def get_user_services(account_id: str):
     services = cursor.fetchall()
     return [service[0] for service in services]
 
-
-def services_agent_func(account_id: str, query: str):
-    """Respond to user queries regarding their subscribed services."""
-    services = get_user_services(account_id)
-    normalized_query = query.lower()
-
-    if not services:
-        return "You are not currently subscribed to any services."
-
-    if "list" in normalized_query or "what" in normalized_query or "which" in normalized_query:
-        services_list = ", ".join(services)
-        return f"You are subscribed to the following services: {services_list}."
-    elif "add" in normalized_query or "subscribe" in normalized_query:
-        return "To add a new service, please visit our website or contact customer support."
-    elif "remove" in normalized_query or "cancel" in normalized_query:
-        return "To remove a service, please visit our website or contact customer support."
-    else:
-        return "I'm here to help with your services. Could you please clarify your request?"
-
-
 def user_services_agent_func(account_id: str, query: str):
     """Respond to the user queries regarding services they have."""
 
