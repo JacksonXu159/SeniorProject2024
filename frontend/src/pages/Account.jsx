@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import {
   User,
   Settings,
@@ -75,9 +75,10 @@ const Account = () => {
     ],
   };
 
-  const handleSwitchAccount = (userName) => {
+  const handleSwitchAccount = (userName, newUserId) => {
     setSelectedUser(userName);
     setSwitchAccountOpen(false);
+    setUserId(newUserId)
   };
 
   return (
@@ -241,7 +242,7 @@ const Account = () => {
             {allUsers.map((user) => (
               <ListItem
                 key={user.id}
-                onClick={() => handleSwitchAccount(user.name)}
+                onClick={() => handleSwitchAccount(user.name, user.id)}
                 sx={{ 
                   cursor: "pointer",
                   borderRadius: 1,
