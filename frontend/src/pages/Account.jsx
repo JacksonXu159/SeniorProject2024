@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import {
   User,
   Settings,
@@ -32,21 +32,24 @@ import {
   DialogContent,
 } from "@mui/material";
 
+import { useAppContext } from "../utils/AppContext";
+
 const Account = () => {
   const [switchAccountOpen, setSwitchAccountOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState("John Johnson");
+  const {userId, setUserId} = useAppContext()
 
   const allUsers = [
-    { name: "John Johnson", id: "VG-7849261", risk: "Medium", status: "Single" },
-    { name: "Michael Williams", id: "VG-7849262", risk: "Medium", status: "Divorced" },
-    { name: "Christina Davis", id: "VG-7849263", risk: "Medium", status: "Married" },
-    { name: "Emily Brown", id: "VG-7849264", risk: "Medium", status: "Single" },
-    { name: "Katie Rodriguez", id: "VG-7849265", risk: "Medium", status: "Married" },
-    { name: "David Garcia", id: "VG-7849266", risk: "High", status: "Divorced" },
-    { name: "Alex Williams", id: "VG-7849267", risk: "Low", status: "Single" },
-    { name: "John Smith", id: "VG-7849268", risk: "High", status: "Divorced" },
-    { name: "Jane Brown", id: "VG-7849269", risk: "High", status: "Married" },
-    { name: "Laura Davis", id: "VG-7849270", risk: "Medium", status: "Single" }
+    { name: "John Johnson", id: "b85c001a-4d7e-4f5d-a918-fb35dcd9c47c", risk: "Medium", status: "Single" },
+    { name: "Michael Williams", id: "dc67a009-5d09-443c-a75e-9eac836ac917", risk: "Medium", status: "Divorced" },
+    { name: "Christina Davis", id: "accd1488-2997-4155-b634-6e8ce29ad006", risk: "Medium", status: "Married" },
+    { name: "Emily Brown", id: "67d3701e-7fda-4191-9c95-07e5dedfccd2", risk: "Medium", status: "Single" },
+    { name: "Katie Rodriguez", id: "ceb7ee2f-26fd-4317-abb2-737e4e438f81", risk: "Medium", status: "Married" },
+    { name: "David Garcia", id: "b2d2f6b8-e9fa-49d1-a37f-35c35f9de857", risk: "High", status: "Divorced" },
+    { name: "Alex Williams", id: "dbeda121-4c5a-49d6-bc54-64aca5d69531", risk: "Low", status: "Single" },
+    { name: "John Smith", id: "a58b37e3-f251-4ccd-8c7c-507a3fcf2a71", risk: "High", status: "Divorced" },
+    { name: "Jane Brown", id: "dab0ed72-e100-4337-8d27-166dbad39acf", risk: "High", status: "Married" },
+    { name: "Laura Davis", id: "5e655314-c264-4999-83ad-67c43cc6db5b", risk: "Medium", status: "Single" }
   ];
 
   const currentUser = allUsers.find(user => user.name === selectedUser);
@@ -200,7 +203,7 @@ const Account = () => {
                   <Typography variant="subtitle2" color="text.secondary">
                     Account ID
                   </Typography>
-                  <Typography variant="body1">{currentUser.id}</Typography>
+                  <Typography variant="body1">{userId}</Typography>
                 </Box>
                 <Divider />
 
