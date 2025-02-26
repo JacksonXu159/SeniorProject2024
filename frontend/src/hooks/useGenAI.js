@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 
-const url = "http://44.193.233.90/message"
+const url = "http://44.193.233.90/message";
 
 const useGenAI = () => {
     const [data, setData] = useState(null);
@@ -11,9 +11,9 @@ const useGenAI = () => {
     const sendMessage = async (userMessage) => {
         setLoading(true);
         setError(null);
-        
+
         const messageJSON = { message: userMessage };
-        
+
         try {
             const response = await axios.post(url, messageJSON);
             setData(response.data);
