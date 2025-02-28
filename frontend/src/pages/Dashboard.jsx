@@ -11,10 +11,12 @@ const Dashboard = () => {
     {
       type: "Retirement Account (IRA)",
       value: "$587,497.75",
+      id: "123"
     },
     {
       type: "Joint Brokerage Account",
       value: "$842,048.84",
+      id: "321"
     },
     
   ]);
@@ -55,7 +57,7 @@ const Dashboard = () => {
         }}
       >
         {accounts.map((account) => (
-          <AccountCard key={account.account} account={account} />
+          <AccountCard key={account.account} account={account}/>
         ))}
       </Box>
     </Box>

@@ -28,7 +28,7 @@ const Navbar = () => {
           }}
         >
           <img
-            src="vanguard-typogrophy.png"
+            src="/vanguard-typogrophy.png"
             alt="Vanguard Logo"
             style={{ height: "75px", maxWidth: "200px", objectFit: "contain" }}
           />

@@ -10,6 +10,7 @@ import Services from "./pages/Services";
 import Settings from "./pages/Settings";
 import Navbar from "./components/Navbar";
 import ChatPopUp from "./components/ChatPopUp";
+import FinancialAccountDetail from "./pages/FinancialAccountDetail";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
             <Route path="/account" element={<Account />} />
             <Route path="/services" element={<Services />} />
             <Route path="/settings" element={<Settings />} />
+            <Route path="/details/:accountId" element={<FinancialAccountDetail />} />
           </Routes>
 
           <ChatPopUp />
