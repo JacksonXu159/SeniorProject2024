@@ -4,8 +4,12 @@ from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 import asyncio
 from chatbot_langchain import chatbot_agent_executor
+from queries import get_user_info 
 
 load_dotenv()
+
+class UserRequest(BaseModel):
+    user_id: str
 
 class Message(BaseModel):
     message: str
@@ -42,3 +46,10 @@ async def create_message(message: Message):
         sender="Bot",
         direction="incoming"
     )
+
+@app.post("/get_user/")
+async def fetch_user_data(request: UserRequest):
+    user_data = get_user_info(request.user_id)
+    if not user_data:
+        raise HTTPException(status_code=404, detail="User not found")
+    return user_data
