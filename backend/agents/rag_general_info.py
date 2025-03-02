@@ -1,9 +1,6 @@
 import os
 import asyncio
-import psycopg2
 import openai
-import numpy as np
-from sklearn.metrics.pairwise import cosine_similarity
 from langchain.agents import Tool
 from langchain_openai import ChatOpenAI
 from langchain.agents import (
@@ -16,6 +13,13 @@ from langchain.prompts import (
 )
 from agents.assistant import assistant_chain
 from dotenv import load_dotenv
+from queries import (
+    get_user_info,
+    get_user_balance,
+    get_user_services,
+    add_service,
+    remove_service
+)
 
 load_dotenv()
 
@@ -25,58 +29,10 @@ client = openai.OpenAI(api_key=OPENAI_API_KEY)
 
 CHATBOT_AGENT_MODEL = os.getenv("CHATBOT_AGENT_MODEL")
 
-PGHOST = os.getenv('PGHOST')
-PGDATABASE = os.getenv('PGDATABASE')
-PGUSER = os.getenv('PGUSER')
-PGPASSWORD = os.getenv('PGPASSWORD')
-ENDPOINT = os.getenv('ENDPOINT')
-
-conn = psycopg2.connect(
-    host=PGHOST,
-    database=PGDATABASE,
-    user=PGUSER,
-    password=PGPASSWORD,
-    port=5432,
-    sslmode='require',
-    options=f"endpoint={ENDPOINT}"  # Fixes the SNI error
-
-)
-
-cursor = conn.cursor()
-
-def get_user_data(account_id: str):
-    """Fetch user account details including balance, marital status, risk tolerance, and portfolio details."""
-    cursor.execute("""
-        SELECT accountname, gender, age, risktolerance, maritalstatus
-        FROM Accounts
-        WHERE accountID = %s
-    """, (account_id,))
-    account_data = cursor.fetchone()
-    
-    cursor.execute("""
-        SELECT SUM(balance) FROM Portfolio WHERE accountID = %s
-    """, (account_id,))
-    total_balance = cursor.fetchone()[0] or 0.0
-    
-    cursor.execute("""
-        SELECT portfolioType, balance FROM Portfolio WHERE accountID = %s
-    """, (account_id,))
-    portfolios = cursor.fetchall()
-    
-    return {
-        "accountName": account_data[0],
-        "gender": account_data[1],
-        "age": account_data[2],
-        "risktolerance": account_data[3],
-        "maritalstatus": account_data[4],
-        "totalBalance": total_balance,
-        "portfolios": [{"portfolioType": p[0], "balance": p[1]} for p in portfolios]
-    }
-
 def user_data_agent_func(account_id: str, query: str):
     """Respond to user queries related to their account information."""
-    user_data = get_user_data(account_id)
-    
+    user_data = get_user_info(account_id)
+
     normalized_query = query.lower().replace('_', ' ')
     
     if "balance" in normalized_query:
@@ -89,15 +45,6 @@ def user_data_agent_func(account_id: str, query: str):
     if "risk" in normalized_query and "tolerance" in normalized_query:
         return f"Your risk tolerance level is {user_data['risktolerance']}."
     return "I'm sorry, I couldn't find an answer to that question."
-
-
-def get_user_services(account_id: str):
-    """Fetch the list of services associated with a user's account."""
-    cursor.execute("""
-        SELECT name FROM Services WHERE accountID = %s
-    """, (account_id,))
-    services = cursor.fetchall()
-    return [service[0] for service in services]
 
 def user_services_agent_func(account_id: str, query: str):
     """Respond to the user queries regarding services they have."""
