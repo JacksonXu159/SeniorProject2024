@@ -10,9 +10,8 @@ import { Link, Route, Routes } from "react-router-dom";
 const Navbar = () => {
   const menuItems = [
     { page: "Dashboard", route: "" },
-    { page: "Account", route: "/account" },
     { page: "Services", route: "/services" },
-    { page: "Settings", route: "/settings" },
+    { page: "Account", route: "/account" },
   ];
 
   return (
@@ -28,18 +27,19 @@ const Navbar = () => {
             alignItems: "center",
           }}
         >
-          <Typography
-            variant="h6"
-            color="primary.main"
-            sx={{ flexGrow: 1, textAlign: "left" }}
-          >
-            Vanguard
-          </Typography>
+          <img
+            src="/vanguard-typogrophy.png"
+            alt="Vanguard Logo"
+            style={{ height: "75px", maxWidth: "200px", objectFit: "contain" }}
+          />
 
           <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2 }}>
             {menuItems.map((item) => (
               <Button key={item} color="primary">
-                <Link to={item.route}>
+                <Link
+                  to={item.route}
+                  style={{ textDecoration: "none", color: "inherit" }}
+                >
                   {item.page}
                 </Link>
               </Button>
