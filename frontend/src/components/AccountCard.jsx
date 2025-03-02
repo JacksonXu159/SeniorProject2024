@@ -1,37 +1,34 @@
 // AccountCard.jsx
-import React from 'react';
-import { Box, Typography } from '@mui/material';
+import React from "react";
+import { Box, Typography, Link } from "@mui/material";
 
 const AccountCard = ({ account }) => (
   <Box
     sx={{
-      backgroundColor: 'background.paper',
+      backgroundColor: "background.paper",
       borderRadius: 2,
       padding: 2,
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'flex-start',
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "flex-start",
+      transition: "background-color 0.3s ease",
+      "&:hover": {
+        backgroundColor: "action.hover",
+        cursor: "pointer",
+      },
     }}
   >
-    <Typography variant="h6" color="text.primary">
-      {account.type}
-    </Typography>
-    <Typography variant="h4" color="primary.main">
-      {account.value || '-'}
-    </Typography>
-    <Typography variant="body2" color="text.secondary">
-      Account number: {account.account}
-    </Typography>
-    {account.status && (
-      <Typography variant="body2" color="text.secondary">
-        {account.status}
+    <Link
+      href={'details/'+account.id}
+      style={{ textDecoration: "none", color: "inherit", width: "100%" }}
+    >
+      <Typography variant="h6" color="text.primary">
+        {account.type}
       </Typography>
-    )}
-    {account.description && (
-      <Typography variant="body2" color="primary.main" sx={{ mt: 1 }}>
-        {account.description}
+      <Typography variant="h4" color="primary.main">
+        {account.value || "-"}
       </Typography>
-    )}
+    </Link>
   </Box>
 );
 

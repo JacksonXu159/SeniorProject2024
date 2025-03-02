@@ -1,6 +1,7 @@
 import React from "react";
-import { Box, Typography, Link } from "@mui/material";
+import { Box, Typography, Link, Chip } from "@mui/material";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
 const services = [
     {
@@ -39,7 +40,11 @@ const services = [
         link: "https://www.vanguard.com/",
     },
 ];
+
 const Services = () => {
+    // Edit through states once database is connected
+    const enrolledServices = ["Financial Planning"];
+
     return (
         <Box
             sx={{
@@ -69,57 +74,73 @@ const Services = () => {
             >
                 Comprehensive financial solutions tailored to your unique needs
             </Typography>
-            {services.map((service) => (
-                <Box
-                    key={service.id}
-                    sx={{
-                        border: "1px solid #ccc",
-                        borderRadius: "8px",
-                        padding: "20px",
-                        marginBottom: "20px",
-                        boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-                        transition: "box-shadow 0.3s ease",
-                        width: "800px",
-                        height: "210px",
-                        "&:hover": {
-                            boxShadow: "0 8px 16px rgba(0, 0, 0, 0.2)",
-                        },
-                    }}
-                >
-                    <Typography variant="h5" component="h3">
-                        {service.title}
-                    </Typography>
-                    <Typography variant="body1" sx={{ mt: 2 }}>
-                        {service.description}
-                    </Typography>
-                    <Link
-                        href={service.link}
-                        target="_blank"
+            {services.map((service) => {
+                const isEnrolled = enrolledServices.includes(service.title);
+                
+                return (
+                    <Box
+                        key={service.id}
                         sx={{
-                            display: "block",
-                            marginTop: "8px",
-                            color: "#0073e6",
-                            textDecoration: "none",
+                            border: "1px solid #ccc",
+                            borderRadius: "8px",
+                            padding: "20px",
+                            marginBottom: "20px",
+                            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                            transition: "box-shadow 0.3s ease",
+                            width: "800px",
+                            height: "210px",
                             position: "relative",
-                            left: "23px",
                             "&:hover": {
-                                textDecoration: "underline",
+                                boxShadow: "0 8px 16px rgba(0, 0, 0, 0.2)",
                             },
                         }}
                     >
-                        <ArrowForwardIcon
+                        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                            <Typography variant="h5" component="h3">
+                                {service.title}
+                            </Typography>
+                            {isEnrolled && (
+                                <Chip
+                                    icon={<CheckCircleIcon />}
+                                    label="Enrolled"
+                                    color="success"
+                                    size="small"
+                                />
+                            )}
+                        </Box>
+                        <Typography variant="body1" sx={{ mt: 2 }}>
+                            {service.description}
+                        </Typography>
+                        <Link
+                            href={service.link}
+                            target="_blank"
                             sx={{
-                                fontSize: "24px",
-                                marginLeft: "4px",
-                                position: "absolute",
-                                left: "-30px",
+                                display: "block",
+                                marginTop: "8px",
+                                color: "#0073e6",
+                                textDecoration: "none",
+                                position: "relative",
+                                left: "23px",
+                                "&:hover": {
+                                    textDecoration: "underline",
+                                },
                             }}
-                        />
-                        {`Learn more`}
-                    </Link>
-                </Box>
-            ))}
+                        >
+                            <ArrowForwardIcon
+                                sx={{
+                                    fontSize: "24px",
+                                    marginLeft: "4px",
+                                    position: "absolute",
+                                    left: "-30px",
+                                }}
+                            />
+                            {`Learn more`}
+                        </Link>
+                    </Box>
+                );
+            })}
         </Box>
     );
 };
+
 export default Services;

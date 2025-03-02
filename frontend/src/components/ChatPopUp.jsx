@@ -1,5 +1,4 @@
 import { useState } from "react";
-import viteLogo from "/vite.svg";
 import { Box, Button, Typography } from "@mui/material";
 import ChatIcon from "@mui/icons-material/Chat";
 import {
