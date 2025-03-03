@@ -7,6 +7,5 @@ pydantic
 langchain
 langchain_openai
 scikit-learn
-nltk
 psycopg2-binary
 keybert
