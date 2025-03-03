@@ -1,8 +1,8 @@
 import { useState } from "react";
 import axios from "axios";
 
-// const url = "http://127.0.0.1:8000/message"; // Local
-const url = "http://44.193.233.90/message"; // Production
+//const url = "http://127.0.0.1:8000/message"; // Local
+const url = "http://50.19.63.89/message"; // Production
 
 const useGenAI = () => {
     const [data, setData] = useState(null);
