@@ -1,3 +1,4 @@
 myvenv/
 .env
 *.pem
+backend/__pycache__/*
