@@ -5,7 +5,7 @@ from database import connection_pool
 def get_user_info(user_id):
     """
     Fetch user account details including name, gender, age, risk tolerance, and marital status.
-    Also retrieves portfolio information.
+    Also retrieves portfolio information and associated services.
     """
     conn = connection_pool.getconn()
     try:
@@ -30,6 +30,10 @@ def get_user_info(user_id):
             cursor.execute("SELECT portfolioType, balance FROM Portfolio WHERE accountID = %s", (user_id,))
             portfolios = cursor.fetchall()
 
+            # Fetch services
+            cursor.execute("SELECT name FROM Services WHERE accountID = %s", (user_id,))
+            services = cursor.fetchall()
+
             return {
                 "accountName": account_data["accountname"],
                 "gender": account_data["gender"],
@@ -37,7 +41,8 @@ def get_user_info(user_id):
                 "risktolerance": account_data["risktolerance"],
                 "maritalstatus": account_data["maritalstatus"],
                 "totalBalance": total_balance,
-                "portfolios": [{"portfolioType": p["portfoliotype"], "balance": p["balance"]} for p in portfolios]
+                "portfolios": [{"portfolioType": p["portfoliotype"], "balance": p["balance"]} for p in portfolios],
+                "services": [service["name"] for service in services]
             }
 
     except psycopg2.Error as e:
