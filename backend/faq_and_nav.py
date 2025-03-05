@@ -1,7 +1,5 @@
 import os
 import psycopg2
-import re
-from keybert import KeyBERT
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from dotenv import load_dotenv
@@ -25,24 +23,31 @@ conn = psycopg2.connect(
 )
 cursor = conn.cursor()
 
-kw_model = KeyBERT()
-
-def extract_keywords(text, top_n=7):
+def extract_keywords_tfidf(text, top_n=7):
     """
-    Extract keywords using KeyBERT.
+    Extracts top N keywords from the text using TF-IDF.
     """
     if not text:
         return ""
-    keywords = kw_model.extract_keywords(text, keyphrase_ngram_range=(1, 2), stop_words='english')
-    return " ".join([kw[0] for kw in keywords])
+
+    vectorizer = TfidfVectorizer(stop_words='english')
+    tfidf_matrix = vectorizer.fit_transform([text])
+
+    feature_array = vectorizer.get_feature_names_out()
+    tfidf_scores = tfidf_matrix.toarray()[0]
+
+    top_indices = tfidf_scores.argsort()[-top_n:][::-1]
+    keywords = [feature_array[i] for i in top_indices]
+
+    return " ".join(keywords)  
+
 
 def search_table(input_query, table_name):
     """
     Searches for the best matching row based on keywords then refines results with TF-IDF and cosine similarity.
     """
-    query_keywords = extract_keywords(input_query)
+    query_keywords = extract_keywords_tfidf(input_query)
 
-    # Run PostgreSQL full-text search to filter relevant rows
     if table_name == "faq_embeddings":
         cursor.execute("""
             SELECT id, question, answer
@@ -66,11 +71,10 @@ def search_table(input_query, table_name):
         return None, 0.0
 
     questions = [row[1] for row in results]
-    keyword_questions = [extract_keywords(q) for q in questions]
 
     vectorizer = TfidfVectorizer(stop_words='english')
-    tfidf_matrix = vectorizer.fit_transform(keyword_questions)
-
+    tfidf_matrix = vectorizer.fit_transform(questions)
+    
     query_vector = vectorizer.transform([query_keywords])
     cosine_similarities = cosine_similarity(query_vector, tfidf_matrix).flatten()
     
@@ -82,13 +86,11 @@ def search_table(input_query, table_name):
 
 def rag_and_nav_agent(input_query, threshold=0.5):
     """
-    Returns the best matching answer from either faq_embeddings or nav_assistant based on PostgreSQL full-text search
-    followed by TF-IDF similarity scoring.
+    Returns the best matching answer from either faq or nav tables.
     """
     faq_row, faq_score = search_table(input_query, "faq_embeddings")
     nav_row, nav_score = search_table(input_query, "nav_assistant")
     
-    # Determine best match
     if faq_row and nav_row:
         if faq_score >= nav_score and faq_score >= threshold:
             return faq_row[2] 
@@ -109,7 +111,7 @@ if __name__ == "__main__":
         userInput = input()
         if userInput.lower() == 'no':
             goAgain = False
-            break
+            break 
         result = rag_and_nav_agent(userInput, 0.2)
         print(result)
         print("Is there anything else I can help you with?", end="\n\n")
