@@ -8,7 +8,6 @@ langchain
 langchain_openai
 scikit-learn
 psycopg2-binary
-keybert
 langchain-community
 langchain-openai
 faiss-cpu
