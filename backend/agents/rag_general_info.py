@@ -7,10 +7,15 @@ from langchain.agents import (
     create_openai_functions_agent,
     AgentExecutor,
 )
+
 from langchain.prompts import (
     ChatPromptTemplate,
     MessagesPlaceholder,
 )
+import sys
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
 from agents.assistant import assistant_chain
 from dotenv import load_dotenv
 from queries import (
@@ -21,6 +26,10 @@ from queries import (
     remove_service
 )
 
+from langchain_openai import OpenAIEmbeddings
+from langchain_community.vectorstores import FAISS
+from langchain.schema import Document
+
 load_dotenv()
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
@@ -29,22 +38,44 @@ client = openai.OpenAI(api_key=OPENAI_API_KEY)
 
 CHATBOT_AGENT_MODEL = os.getenv("CHATBOT_AGENT_MODEL")
 
-def user_data_agent_func(account_id: str, query: str):
-    """Respond to user queries related to their account information."""
-    user_data = get_user_info(account_id)
 
-    normalized_query = query.lower().replace('_', ' ')
+def user_data_agent_func(account_id: str, query: str):
+    user_data = get_user_info(account_id)
     
-    if "balance" in normalized_query:
-        return f"Your total balance is ${user_data['totalBalance']:.2f}."
-    if "marital" in normalized_query and "status" in normalized_query:
-        return f"Your marital status is {user_data['maritalstatus']}."
-    if "portfolio" in normalized_query:
-        portfolios_info = "\n".join([f"{p['portfolioType']}: ${p['balance']:.2f}" for p in user_data['portfolios']])
-        return f"Here are your portfolios:\n{portfolios_info}"
-    if "risk" in normalized_query and "tolerance" in normalized_query:
-        return f"Your risk tolerance level is {user_data['risktolerance']}."
+    print(query)
+    intents = {
+        "balance": lambda: f"Your total balance is ${user_data['totalBalance']:.2f}.",
+        "marital status": lambda: f"Your marital status is {user_data['maritalstatus']}.",
+        "portfolio": lambda: "\n".join([f"{p['portfolioType']}: ${p['balance']:.2f}" for p in user_data['portfolios']]),
+        "risk tolerance": lambda: f"Your risk tolerance level is {user_data['risktolerance']}.",
+        "services": lambda: "Your services are: " + ", ".join(user_data['services']) if user_data['services'] else "You are not subscribed to any services."
+    }
+
+    normalized_query = query.lower()
+    for key in intents.keys():
+        if key in normalized_query:
+            print(f"Exact match intent: {key}, returning result.")
+            return intents[key]() 
+    
     return "I'm sorry, I couldn't find an answer to that question."
+
+    # documents = [Document(page_content=intent, metadata={"action": intent}) for intent in intents]
+    # embeddings = OpenAIEmbeddings()
+    # vector_store = FAISS.from_documents(documents, embeddings)
+
+    # similar_docs_with_scores = vector_store.similarity_search_with_score(query, k=1)
+    
+    # if similar_docs_with_scores:
+    #     best_doc, best_score = similar_docs_with_scores[0]
+    #     best_intent = best_doc.metadata["action"]
+        
+    #     print(f"Similarity score for '{best_intent}': {best_score:.4f}")
+        
+    #     return intents[best_intent]()
+    # else:
+    #     print("No suitable match found.")
+    #     return "I'm sorry, I couldn't find an answer to that question."
+
 
 def user_services_agent_func(account_id: str, query: str):
     """Respond to the user queries regarding services they have."""
@@ -99,25 +130,26 @@ tools = [
         - balance (query with 'balance')
         - marital status (query with 'marital status')
         - portfolios (query with 'portfolios')
-        - risk tolerance (query with 'risk tolerance')"""
+        - risk tolerance (query with 'risk tolerance')
+        - services (query with 'services')"""
     ),
-    Tool(
-        name="Consultant",
-        func=assistant_chain.invoke,
-        description="""Useful when you need to answer general finance-related questions. 
-        Not useful for any data or user-specific questions such as account balance, statements,
-        user's investments, etc."""
-    ),
-    Tool(
-        name="UserServicesLookup",
-        func=lambda query: user_services_agent_func(tmpID, query),
-        description="""User for handling queries related to services or the services the user has.
-        Examples:
-        - List services
-        - Adding Services
-        - Removing Services
-        """
-    ),
+    # Tool(
+    #     name="Consultant",
+    #     func=assistant_chain.invoke,
+    #     description="""Useful when you need to answer general finance-related questions. 
+    #     Not useful for any data or user-specific questions such as account balance, statements,
+    #     user's investments, etc."""
+    # ),
+    # Tool(
+    #     name="UserServicesLookup",
+    #     func=lambda query: user_services_agent_func(tmpID, query),
+    #     description="""User for handling queries related to services or the services the user has.
+    #     Examples:
+    #     - List services
+    #     - Adding Services
+    #     - Removing Services
+    #     """
+    # ),
 ]
 
 chatbot_agent_prompt = ChatPromptTemplate.from_messages(
@@ -152,11 +184,11 @@ async def main():
 
 def test_service():
     test_queries = [
-        "What services am I subscribed to?",
-        "I want to subscribe to Financial Planning",
-        "How can I unsubscribe from Investment Management?",
-        "List all my services",
-        "Remove my subscription to Retirement Planning"
+        "whats my money, can i afford a dog?",
+        # "I want to subscribe to Financial Planning",
+        # "How can I unsubscribe from Investment Management?",
+        # "List all my services",
+        # "Remove my subscription to Retirement Planning"
     ]
     for query in test_queries:
         result = asyncio.run(chatbot_agent_executor.ainvoke({"input": query}))
