@@ -32,7 +32,8 @@ tools = [
         - balance (query with 'balance')
         - marital status (query with 'marital status')
         - portfolios (query with 'portfolios')
-        - risk tolerance (query with 'risk tolerance')"""
+        - risk tolerance (query with 'risk tolerance')
+        - services (query with 'services')"""
     ),
     Tool(
         name="Consultant",
@@ -40,16 +41,6 @@ tools = [
         description="""Useful when you need to answer general finance-related questions. 
         Not useful for any data or user-specific questions such as account balance, statements,
         user's investments, etc."""
-    ),
-    Tool(
-        name="UserServicesLookup",
-        func=lambda query: user_services_agent_func(tmpID, query),
-        description="""User for handling queries related to services or the services the user has.
-        Examples:
-        - List services
-        - Adding Services
-        - Removing Services
-        """
     ),
     Tool(
         name="NavAndFaq",
