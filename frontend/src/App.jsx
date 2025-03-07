@@ -2,7 +2,7 @@ import { ThemeProvider, CssBaseline } from "@mui/material";
 import theme from "./utils/theme";
 import { Routes, Route } from "react-router-dom";
 import { AppProvider } from "./utils/AppContext";
-import { useState } from "react";
+import { useEffect } from "react";
 
 import Dashboard from "./pages/Dashboard";
 import Account from "./pages/Account";
@@ -11,8 +11,17 @@ import Settings from "./pages/Settings";
 import Navbar from "./components/Navbar";
 import ChatPopUp from "./components/ChatPopUp";
 import FinancialAccountDetail from "./pages/FinancialAccountDetail";
+import { useUserStore } from "./hooks/useUserStore";
 
 function App() {
+  const { fetchUserData } = useUserStore();
+  
+  
+  useEffect(() => {
+    // Fetch user data when app starts
+    fetchUserData();
+  }, []);
+
   return (
     <div className="App">
       <AppProvider>
