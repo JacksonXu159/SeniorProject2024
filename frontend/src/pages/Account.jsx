@@ -38,7 +38,6 @@ import { useUserStore } from "../hooks/useUserStore";
 const Account = () => {
   const [switchAccountOpen, setSwitchAccountOpen] = useState(false);
   const { userId, setUserId, userData, loading, error } = useUserStore();
-  console.log(userData)
 
   const allUsers = [
     {
