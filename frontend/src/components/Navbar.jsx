@@ -11,6 +11,7 @@ const Navbar = () => {
   const menuItems = [
     { page: "Dashboard", route: "" },
     { page: "Services", route: "/services" },
+    { page: "Transactions", route: "/details" },
     { page: "Account", route: "/account" },
   ];
 

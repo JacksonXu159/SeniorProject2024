@@ -34,7 +34,7 @@ function App() {
             <Route path="/account" element={<Account />} />
             <Route path="/services" element={<Services />} />
             <Route path="/settings" element={<Settings />} />
-            <Route path="/details/:section?/:accountId" element={<FinancialAccountDetail />} />
+            <Route path="/details" element={<FinancialAccountDetail />} />
           </Routes>
 
           <ChatPopUp />
