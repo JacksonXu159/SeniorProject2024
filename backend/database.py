@@ -8,6 +8,7 @@ PGHOST = os.getenv("PGHOST")
 PGDATABASE = os.getenv("PGDATABASE")
 PGUSER = os.getenv("PGUSER")
 PGPASSWORD = os.getenv("PGPASSWORD")
+ENDPOINT = os.getenv("ENDPOINT")
 
 try:
     connection_pool = pool.SimpleConnectionPool(
@@ -18,7 +19,8 @@ try:
         user=PGUSER,
         password=PGPASSWORD,
         port=5432,
-        sslmode="require"
+        sslmode="require",
+        options=f"endpoint={ENDPOINT}"  # This fixes the SNI error
     )
 
     if connection_pool:
