@@ -4,8 +4,9 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
 import { useUserStore } from "../hooks/useUserStore";
+import {useUserServices } from "../hooks/useUserServices";
 
-const services = [
+const availableServices = [
     {
         id: 1,
         title: "Financial Planning",
@@ -44,9 +45,8 @@ const services = [
 ];
 
 const Services = () => {
-    // Edit through states once database is connected
-    const enrolledServices = ["Financial Planning"];
     const { userId } = useUserStore();
+    const { services } = useUserServices(userId);
 
     return (
         <Box
@@ -77,8 +77,8 @@ const Services = () => {
             >
                 Comprehensive financial solutions tailored to your unique needs
             </Typography>
-            {services.map((service) => {
-                const isEnrolled = enrolledServices.includes(service.title);
+            {availableServices.map((service) => {
+                const isEnrolled = services.includes(service.title);
                 
                 return (
                     <Box

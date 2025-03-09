@@ -18,7 +18,7 @@ export const useUserServices = (userId, { fetchOnMount = true } = {}) => {
     setError(null);
     
     try {
-      const response = await fetch(`/user/${userId}/services/`);
+      const response = await fetch(`${url}/user/${userId}/services/`);
       
       if (!response.ok) {
         throw new Error(`Error fetching services: ${response.status}`);
