@@ -1,4 +1,3 @@
-// AccountCard.jsx
 import React from "react";
 import { Box, Typography, Link } from "@mui/material";
 
@@ -18,17 +17,19 @@ const AccountCard = ({ account }) => (
       },
     }}
   >
-    <Link
-      href={'details/'+account.id}
-      style={{ textDecoration: "none", color: "inherit", width: "100%" }}
-    >
-      <Typography variant="h6" color="text.primary">
-        {account.type}
-      </Typography>
-      <Typography variant="h4" color="primary.main">
-        {account.value || "-"}
-      </Typography>
-    </Link>
+    <Typography variant="h6" color="text.primary">
+      {account.portfolioType}
+    </Typography>
+    <Typography variant="h4" color="primary.main">
+      $
+      {parseFloat(account.balance || 0).toLocaleString("en-US", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })}
+    </Typography>
+    <Typography variant="h6" color="text.primary">
+      {account.portfolioId}
+    </Typography>
   </Box>
 );
 
