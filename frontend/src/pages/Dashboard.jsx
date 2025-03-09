@@ -7,9 +7,17 @@ import { useUserStore } from "../hooks/useUserStore";
 
 const Dashboard = () => {
   const [total, setTotal] = useState(0);
+  const { userId, userData, fetchUserData} = useUserStore();
 
-  const { userId, setUserId, userData, loading, error } = useUserStore();
-  const portfolios = userData.portfolios;
+  // Safely access portfolios with a default empty array if it doesn't exist
+  const portfolios = userData?.portfolios || [];
+
+  // Load user data when component mounts
+  useEffect(() => {
+    if (userId) {
+      fetchUserData(userId);
+    }
+  }, [userId, fetchUserData]);
 
   useEffect(() => {
     const computedTotal = portfolios.reduce((sum, account) => {
