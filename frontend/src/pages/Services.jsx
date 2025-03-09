@@ -3,6 +3,8 @@ import { Box, Typography, Link, Chip } from "@mui/material";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
+import { useUserStore } from "../hooks/useUserStore";
+
 const services = [
     {
         id: 1,
@@ -44,6 +46,7 @@ const services = [
 const Services = () => {
     // Edit through states once database is connected
     const enrolledServices = ["Financial Planning"];
+    const { userId } = useUserStore();
 
     return (
         <Box
