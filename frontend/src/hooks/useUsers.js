@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 
-const url = "http://127.0.0.1:8000"; // Local
-// const url = "http://44.193.233.90"; // Production
+// const url = "http://localhost:8000"; // Local
+const url = "http://44.193.233.90"; // Production
 
 export const useUsers = ({ fetchOnMount = true } = {}) => {
   const [users, setUsers] = useState([]);

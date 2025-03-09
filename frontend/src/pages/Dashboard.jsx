@@ -12,8 +12,6 @@ const Dashboard = () => {
   // Safely access portfolios with a default empty array if it doesn't exist
   const portfolios = userData?.portfolios || [];
 
-  console.log(portfolios)
-
   // Load user data when component mounts
   useEffect(() => {
     if (userId) {

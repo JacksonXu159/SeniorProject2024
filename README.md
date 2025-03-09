@@ -24,7 +24,7 @@ The goal is to allow clients to ask questions and receive answers directly from 
 7. In a different terminal, cd into ./frontend and install dependencies `npm i `
 8. Open a new terminal
 9. Cd into ./frontend
-10. To Test locally: Open useGenAI.js and change const url to `http://127.0.0.1:8000/message`
+10. To Test locally: Open useGenAI.js and change const url to `http://localhost:8000/message`
     - Make sure to change it back to what it was originally when you're done
 11. Run `npm i`
 12. Run `npm run dev`
