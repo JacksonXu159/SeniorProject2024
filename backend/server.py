@@ -2,8 +2,7 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
-import asyncio
-from chatbot_langchain import chatbot_agent_executor
+from chat_handler import process_message
 
 load_dotenv()
 
@@ -33,13 +32,10 @@ async def root():
 
 @app.post("/message/")
 async def create_message(message: Message):
-    input_data = {"input": message.message, "frontendUrl": message.frontendUrl}  
-    
-    result = await chatbot_agent_executor.ainvoke(input_data)
-    bot_message = result['output']
-    
+    bot_response = process_message(message.message, message.frontendUrl)
+
     return MessageResponse(
-        message=bot_message,
+        message=bot_response,
         sender="Bot",
         direction="incoming"
     )
