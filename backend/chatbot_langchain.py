@@ -35,16 +35,17 @@ tools = [
         - risk tolerance (query with 'risk tolerance')
         - services (query with 'services')"""
     ),
-    Tool(
-        name="Consultant",
-        func=assistant_chain.invoke,
-        description="""Useful when you need to answer general finance-related questions. 
-        Not useful for any data or user-specific questions such as account balance, statements,
-        user's investments, etc."""
-    ),
+    # Tool(
+    #     name="Consultant",
+    #     func=assistant_chain.invoke,
+    #     description="""Useful when you need to answer general finance-related questions. 
+    #     Not useful for any data or user-specific questions such as account balance, statements,
+    #     user's investments, etc."""
+    # ),
     Tool(
         name="NavAndFaq",
         func=lambda query: rag_and_nav_agent(query, 0.5),
+        return_direct = True,
         description="""User for handling queries related where services are located or finace related questions.
         Examples:
         - Where are my transactions?

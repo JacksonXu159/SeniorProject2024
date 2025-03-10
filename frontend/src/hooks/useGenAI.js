@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 
-//const url = "http://127.0.0.1:8000/message"; // Local
+// const url = "http://127.0.0.1:8000/message"; // Local
 const url = "http://44.193.233.90:8000/message/"; // Production
 
 const useGenAI = () => {
@@ -12,9 +12,13 @@ const useGenAI = () => {
     const sendMessage = async (userMessage) => {
         setLoading(true);
         setError(null);
-
-        const messageJSON = { message: userMessage };
-
+        const frontendUrl = window.location.origin;
+    
+        const messageJSON = { 
+            message: userMessage,
+            frontendUrl: frontendUrl
+        };
+    
         try {
             const response = await axios.post(url, messageJSON);
             setData(response.data);
@@ -27,6 +31,8 @@ const useGenAI = () => {
             setLoading(false);
         }
     };
+    
+    
 
     return { sendMessage, data, error, loading };
 };
