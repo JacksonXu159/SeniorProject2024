@@ -55,9 +55,10 @@ tools = [
 ]
 chatbot_agent_prompt = ChatPromptTemplate.from_messages(
     [
-        ("system", "You are a helpful chatbot assistant"),
-        MessagesPlaceholder("chat_history", optional=True),
-        ("human", "{input}"),
+        ("system", "You are a helpful chatbot assistant."),
+        ("system", "Here is the conversation history so far: {chat_history}"),
+        MessagesPlaceholder("chat_history"),
+        ("human", "User said previously: {chat_history}. Now the user says: {input}"),
         MessagesPlaceholder("agent_scratchpad"),
     ]
 )
