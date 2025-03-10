@@ -9,6 +9,7 @@ load_dotenv()
 
 class Message(BaseModel):
     message: str
+    frontendUrl: str
     
 class MessageResponse(BaseModel):
     message: str
@@ -32,7 +33,7 @@ async def root():
 
 @app.post("/message/")
 async def create_message(message: Message):
-    input_data = {"input": message.message}
+    input_data = {"input": message.message, "frontendUrl": message.frontendUrl}  
     
     result = await chatbot_agent_executor.ainvoke(input_data)
     bot_message = result['output']
