@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { API_URL } from '../config'
 
-// const url = "http://localhost:8000/get_user"; // Local
-const url = "http://44.193.233.90/get_user"; // Production
+const url = `${API_URL}/get_user/`;
 
 const useUserData = (userId) => {
   const [userData, setUserData] = useState(null);

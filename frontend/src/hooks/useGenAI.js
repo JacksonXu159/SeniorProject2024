@@ -1,8 +1,8 @@
 import { useState } from "react";
 import axios from "axios";
+import { API_URL } from '../config'
 
-// const url = "http://localhost:8000/message"; // Local
-const url = "http://44.193.233.90/message"; // Production
+const url = `${API_URL}/message/`; 
 
 const useGenAI = () => {
     const [data, setData] = useState(null);

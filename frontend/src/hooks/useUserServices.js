@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'; 
+import { API_URL } from '../config'
 
-// const url = "http://localhost:8000"; // Local
-const url = "http://44.193.233.90"; // Production
+const url = API_URL;
 
 export const useUserServices = (userId, { fetchOnMount = true } = {}) => {
   const [services, setServices] = useState([]);

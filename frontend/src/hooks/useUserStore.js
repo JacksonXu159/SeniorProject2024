@@ -1,9 +1,10 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import axios from 'axios';
+import { API_URL } from '../config'
 
-// const url = "http://localhost:8000/get_user"; // Local
-const url = "http://44.193.233.90/get_user"; // Production
+//const url = "http://localhost:8000/get_user/"; // Local
+const url = `${API_URL}/get_user/`; 
 
 export const useUserStore = create(
   persist(

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
+import { API_URL } from '../config'
 
-// const url = "http://localhost:8000"; // Local
-const url = "http://44.193.233.90"; // Production
+const url = `${API_URL}/users/`;
 
 export const useUsers = ({ fetchOnMount = true } = {}) => {
   const [users, setUsers] = useState([]);
@@ -13,7 +13,7 @@ export const useUsers = ({ fetchOnMount = true } = {}) => {
     setError(null);
     
     try {
-      const response = await fetch(`${url}/users/`);
+      const response = await fetch(url);
       
       if (!response.ok) {
         throw new Error(`Error fetching users: ${response.status}`);
