@@ -22,17 +22,36 @@ from agents.rag_general_info import user_data_agent_func, user_services_agent_fu
 from faq_and_nav import rag_and_nav_agent
 
 CHATBOT_AGENT_MODEL = os.getenv("CHATBOT_AGENT_MODEL")
-tmpID = "5e655314-c264-4999-83ad-67c43cc6db5b"
+
+current_user_id = "5e655314-c264-4999-83ad-67c43cc6db5b"  # Default ID
+
+def set_user_id(user_id):
+    """Update the current user ID"""
+    global current_user_id
+    current_user_id = user_id
+    return current_user_id
+
+def get_current_user_id():
+    """Get the current user ID"""
+    global current_user_id
+    return current_user_id
+
+def get_user_id_from_input(input_data=None):
+    """Gets user ID from input data or falls back to current user ID"""
+    if input_data and "userId" in input_data:
+        return input_data.get("userId")
+    return get_current_user_id()
 
 tools = [
     Tool(
         name="UserDataLookup",
-        func=lambda query: user_data_agent_func(tmpID, query),
+        func=lambda query: user_data_agent_func(current_user_id, query),
         description="""Useful for retrieving:
         - balance (query with 'balance')
         - marital status (query with 'marital status')
         - portfolios (query with 'portfolios')
-        - risk tolerance (query with 'risk tolerance')"""
+        - risk tolerance (query with 'risk tolerance')
+        - services (query with 'services')"""
     ),
     # Tool(
     #     name="Consultant",
@@ -42,19 +61,10 @@ tools = [
     #     user's investments, etc."""
     # ),
     Tool(
-        name="UserServicesLookup",
-        func=lambda query: user_services_agent_func(tmpID, query),
-        description="""User for handling queries related to services or the services the user has.
-        Examples:
-        - List services
-        - Adding Services
-        - Removing Services
-        """
-    ),
-    Tool(
         name="NavAndFaq",
         func=lambda query: rag_and_nav_agent(query, 0.5),
-        description="""Useful for handling questions about where things are located and general finance-related questions.
+        return_direct = True,
+        description="""User for handling queries related where services are located or finace related questions.
         Examples:
         - Where are my transactions?
         - What are stocks?
@@ -63,9 +73,10 @@ tools = [
 ]
 chatbot_agent_prompt = ChatPromptTemplate.from_messages(
     [
-        ("system", "You are a helpful chatbot assistant"),
-        MessagesPlaceholder("chat_history", optional=True),
-        ("human", "{input}"),
+        ("system", "You are a helpful chatbot assistant."),
+        ("system", "Here is the conversation history so far: {chat_history}"),
+        MessagesPlaceholder("chat_history"),
+        ("human", "User said previously: {chat_history}. Now the user says: {input}"),
         MessagesPlaceholder("agent_scratchpad"),
     ]
 )
@@ -83,6 +94,7 @@ chatbot_agent_executor = AgentExecutor(
     tools=tools,
     return_intermediate_steps=True,
     verbose=True,
+    tool_kwargs={"input_data": lambda x: x}
 )
 
 async def main():

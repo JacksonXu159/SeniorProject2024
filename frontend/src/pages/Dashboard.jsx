@@ -3,31 +3,29 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { Box, Typography } from "@mui/material";
 import AccountCard from "../components/AccountCard";
+import { useUserStore } from "../hooks/useUserStore";
 
 const Dashboard = () => {
   const [total, setTotal] = useState(0);
+  const { userId, userData, fetchUserData} = useUserStore();
 
-  const [accounts, setAccounts] = useState([
-    {
-      type: "Retirement Account (IRA)",
-      value: "$587,497.75",
-      id: "123"
-    },
-    {
-      type: "Joint Brokerage Account",
-      value: "$842,048.84",
-      id: "321"
-    },
-    
-  ]);
+  // Safely access portfolios with a default empty array if it doesn't exist
+  const portfolios = userData?.portfolios || [];
+
+  // Load user data when component mounts
+  useEffect(() => {
+    if (userId) {
+      fetchUserData(userId);
+    }
+  }, [userId, fetchUserData]);
 
   useEffect(() => {
-    const computedTotal = accounts.reduce((sum, account) => {
-      const numericValue = parseFloat(account.value.replace(/[$,]/g, "")) || 0;
+    const computedTotal = portfolios.reduce((sum, account) => {
+      const numericValue = parseFloat(account.balance) || 0;
       return sum + numericValue;
     }, 0);
     setTotal(computedTotal);
-  }, [accounts]);
+  }, [userData, userId]);
 
   return (
     <Box
@@ -42,7 +40,7 @@ const Dashboard = () => {
       }}
     >
       <Typography variant="h1" color="primary.main">
-      ${total.toLocaleString("en-US", { minimumFractionDigits: 2 })}
+        ${total.toLocaleString("en-US", { minimumFractionDigits: 2 })}
       </Typography>
       <Typography variant="body1" color="text.secondary" sx={{ mt: 2 }}>
         Combined Portfolio Value
@@ -56,8 +54,11 @@ const Dashboard = () => {
           width: "100%",
         }}
       >
-        {accounts.map((account) => (
-          <AccountCard key={account.account} account={account}/>
+        {portfolios.map((account, index) => (
+          <AccountCard
+            key={index}
+            account={account}
+          />
         ))}
       </Box>
     </Box>
