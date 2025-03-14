@@ -11,6 +11,7 @@ const Navbar = () => {
   const menuItems = [
     { page: "Dashboard", route: "" },
     { page: "Services", route: "/services" },
+    { page: "Transactions", route: "/details" },
     { page: "Account", route: "/account" },
   ];
 
@@ -34,8 +35,8 @@ const Navbar = () => {
           />
 
           <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2 }}>
-            {menuItems.map((item) => (
-              <Button key={item} color="primary">
+            {menuItems.map((item,index) => (
+              <Button key={`${item}-${index}`} color="primary">
                 <Link
                   to={item.route}
                   style={{ textDecoration: "none", color: "inherit" }}
