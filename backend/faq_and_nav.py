@@ -3,6 +3,8 @@ import psycopg2
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from dotenv import load_dotenv
+from langchain_openai import OpenAIEmbeddings
+from langchain_community.vectorstores import FAISS
 
 load_dotenv()
 
@@ -23,6 +25,40 @@ conn = psycopg2.connect(
 )
 cursor = conn.cursor()
 
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+
+embeddings = OpenAIEmbeddings(
+    model="text-embedding-3-large"
+)
+
+def search_table_once(table_name):
+    """
+    Searches for the best matching row in both tables using TF-IDF vectorization and cosine similarity between the expanded user query and the question.
+    """
+    
+    if table_name == "faq_embeddings":
+        cursor.execute("SELECT id, question, answer FROM faq_embeddings")
+    else:
+        return None, 0.0
+
+    results = cursor.fetchall()
+    if not results:
+        return None, 0.0
+
+    corpus = ['' if row[1] is None else row[1] for row in results]
+    vector_store = FAISS.from_texts(texts=corpus, embedding=embeddings)
+
+    return corpus, vector_store, results
+
+def embedding_and_similarity_search(input_query, corpus, vector_store, results):
+    query_embedding = embeddings.embed_query(input_query)
+    answer = vector_store.similarity_search_by_vector(query_embedding, 1)
+
+    question = answer[0].page_content
+    answers = dict(zip(corpus, results))
+
+    return answers[question][2]
+
 def extract_keywords_tfidf(text, top_n=7):
     """
     Extracts top N keywords from the text using TF-IDF.
@@ -40,6 +76,7 @@ def extract_keywords_tfidf(text, top_n=7):
     keywords = [feature_array[i] for i in top_indices]
 
     return " ".join(keywords)  
+
 
 def search_table(input_query, is_faq):
     """
@@ -62,6 +99,8 @@ def search_table(input_query, is_faq):
     questions = [row[1] for row in results]
 
     vectorizer = TfidfVectorizer(stop_words='english')
+    tfidf_matrix = vectorizer.fit_transform(questions)
+    
     tfidf_matrix = vectorizer.fit_transform(questions)
     
     query_vector = vectorizer.transform([query_keywords])
@@ -95,14 +134,30 @@ def rag_and_nav_agent(input_query, frontend_url, threshold=0.5):
 
 
 if __name__ == "__main__":
-    print("Hi! How may I assist you today?", end="\n\n")
-    goAgain = True
+    userInput = input("(1) tfidf or (2) similarity search w/ embeddings")
+    if(userInput == '2'):
+        corpus, vector_store, results = search_table_once("faq_embeddings")
+        print("Hi, you are now using similarity search! How may I assist you today?", end="\n\n")
+        goAgain = True
 
-    while goAgain:
-        userInput = input()
-        if userInput.lower() == 'no':
-            goAgain = False
-            break 
-        result = rag_and_nav_agent(userInput, 0.2)
-        print(result)
-        print("Is there anything else I can help you with?", end="\n\n")
+        while goAgain:
+            userInput = input()
+            if userInput.lower() == 'no':
+                goAgain = False
+                break
+            result = embedding_and_similarity_search(userInput, corpus, vector_store, results)
+            print(result)
+            print("Is there anything else I can help you with?", end="\n\n")
+        
+    else:
+        print("Hi, you are now using tfidf! How may I assist you today?", end="\n\n")
+        goAgain = True
+
+        while goAgain:
+            userInput = input()
+            if userInput.lower() == 'no':
+                goAgain = False
+                break 
+            result = rag_and_nav_agent(userInput, 0.2)
+            print(result)
+            print("Is there anything else I can help you with?", end="\n\n")
