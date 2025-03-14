@@ -3,8 +3,8 @@ from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 import asyncio
-from chatbot_langchain import chatbot_agent_executor
-from queries import get_user_info, get_all_users, get_user_services  # Added imports
+from chatbot_langchain import chatbot_agent_executor, set_user_id 
+from queries import get_user_info, get_all_users, get_user_services # Added imports
 
 load_dotenv()
 
@@ -14,6 +14,7 @@ class UserRequest(BaseModel):
 class Message(BaseModel):
     message: str
     frontendUrl: str
+    userId: str
     
 class MessageResponse(BaseModel):
     message: str
@@ -40,7 +41,10 @@ async def root():
 
 @app.post("/message/")
 async def create_message(message: Message):
+
+    set_user_id(message.userId)
     input_data = {"input": message.message, "frontendUrl": message.frontendUrl}  
+    print(input_data)
     
     result = await chatbot_agent_executor.ainvoke(input_data)
     bot_message = result['output']

@@ -9,14 +9,15 @@ const useGenAI = () => {
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
 
-    const sendMessage = async (userMessage) => {
+    const sendMessage = async (userMessage, userId) => {
         setLoading(true);
         setError(null);
         const frontendUrl = window.location.origin;
     
         const messageJSON = { 
             message: userMessage,
-            frontendUrl: frontendUrl
+            frontendUrl: frontendUrl,
+            userId: userId
         };
     
         try {
