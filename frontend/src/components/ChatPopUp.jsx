@@ -12,6 +12,7 @@ import {
 import "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";
 import "./ChatPopup.css";
 import useGenAI from "../hooks/useGenAI";
+import { useUserStore } from "../hooks/useUserStore";
 
 let style = {
   background: "#c8042c",
@@ -38,6 +39,8 @@ let boxStyle = {
 };
 
 function ChatPopUp({}) {
+  const { userId, userData, fetchUserData} = useUserStore();
+
   const [messages, setMessages] = useState([
     {
       message: "Hi",
@@ -62,7 +65,7 @@ function ChatPopUp({}) {
 
   const handleSend = async (message) => {
     setTyping(true);
-    const response = await sendMessage(message);
+    const response = await sendMessage(message, userId);
     console.log(response)
     const newUserMessage = {
       message: message,

@@ -1,22 +1,23 @@
 import { useState } from "react";
 import axios from "axios";
+import { API_URL } from '../config'
 
-// const url = "http://127.0.0.1:8000/message"; // Local
-const url = "http://44.193.233.90:8000/message/"; // Production
+const url = `${API_URL}/message/`; 
 
 const useGenAI = () => {
     const [data, setData] = useState(null);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
 
-    const sendMessage = async (userMessage) => {
+    const sendMessage = async (userMessage, userId) => {
         setLoading(true);
         setError(null);
         const frontendUrl = window.location.origin;
     
         const messageJSON = { 
             message: userMessage,
-            frontendUrl: frontendUrl
+            frontendUrl: frontendUrl,
+            userId: userId
         };
     
         try {

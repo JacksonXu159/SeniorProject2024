@@ -78,7 +78,6 @@ def rag_and_nav_agent(input_query, frontend_url, threshold=0.5):
     Returns the best matching answer from the `faq_embeddings` table.
     Determines if the best match is from FAQ (faq=1) or Navigation (faq=0).
     """
-    tmpID = "5e655314-c264-4999-83ad-67c43cc6db5b"  
     faq_row, faq_score = search_table(input_query, 1) 
     nav_row, nav_score = search_table(input_query, 0)
     
@@ -89,7 +88,8 @@ def rag_and_nav_agent(input_query, frontend_url, threshold=0.5):
         return response
     
     elif nav_row and nav_score >= threshold:
-        return f'You can find this information here <a href="{frontend_url}/details/{tmpID}/{nav_row[3]}" target="_blank" style="color:blue; text-decoration:underline;">Click here for more details</a>'
+        print(nav_row[3])
+        return f'You can find this information here <a href="/{nav_row[3]}" target="_blank" style="color:blue; text-decoration:underline;">Click here for more details</a>'
         
     return "I'm sorry, I couldn't find an answer to that question."
 

@@ -22,12 +22,30 @@ from agents.rag_general_info import user_data_agent_func, user_services_agent_fu
 from faq_and_nav import rag_and_nav_agent
 
 CHATBOT_AGENT_MODEL = os.getenv("CHATBOT_AGENT_MODEL")
-tmpID = "5e655314-c264-4999-83ad-67c43cc6db5b"
+
+current_user_id = "5e655314-c264-4999-83ad-67c43cc6db5b"  # Default ID
+
+def set_user_id(user_id):
+    """Update the current user ID"""
+    global current_user_id
+    current_user_id = user_id
+    return current_user_id
+
+def get_current_user_id():
+    """Get the current user ID"""
+    global current_user_id
+    return current_user_id
+
+def get_user_id_from_input(input_data=None):
+    """Gets user ID from input data or falls back to current user ID"""
+    if input_data and "userId" in input_data:
+        return input_data.get("userId")
+    return get_current_user_id()
 
 tools = [
     Tool(
         name="UserDataLookup",
-        func=lambda query: user_data_agent_func(tmpID, query),
+        func=lambda query: user_data_agent_func(current_user_id, query),
         description="""Useful for retrieving:
         - balance (query with 'balance')
         - marital status (query with 'marital status')
@@ -76,6 +94,7 @@ chatbot_agent_executor = AgentExecutor(
     tools=tools,
     return_intermediate_steps=True,
     verbose=True,
+    tool_kwargs={"input_data": lambda x: x}
 )
 
 async def main():
