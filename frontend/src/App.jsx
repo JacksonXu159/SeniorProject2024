@@ -31,10 +31,11 @@ function App() {
 
           <Routes>
             <Route path="/" element={<Dashboard />} />
-            <Route path="/account" element={<Account />} />
-            <Route path="/services" element={<Services />} />
-            <Route path="/settings" element={<Settings />} />
-            <Route path="/details" element={<FinancialAccountDetail />} />
+            <Route path="/Dashboard" element={<Dashboard />} />
+            <Route path="/Account" element={<Account />} />
+            <Route path="/Services" element={<Services />} />
+            <Route path="/Settings" element={<Settings />} />
+            <Route path="/Transactions" element={<FinancialAccountDetail />} />
           </Routes>
 
           <ChatPopUp />
