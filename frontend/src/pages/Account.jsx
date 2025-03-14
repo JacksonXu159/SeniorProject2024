@@ -106,9 +106,6 @@ const Account = () => {
                 <Typography variant="h6" sx={{ fontWeight: 600 }}>
                   {userData.accountName}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  {userId}
-                </Typography>
               </Box>
             </Paper>
 
@@ -192,14 +189,6 @@ const Account = () => {
 
                 <Box>
                   <Typography variant="subtitle2" color="text.secondary">
-                    Account ID
-                  </Typography>
-                  <Typography variant="body1">{userId}</Typography>
-                </Box>
-                <Divider />
-
-                <Box>
-                  <Typography variant="subtitle2" color="text.secondary">
                     Risk Tolerance
                   </Typography>
                   <Typography variant="body1">{userData.risktolerance}</Typography>
@@ -252,7 +241,7 @@ const Account = () => {
                 </ListItemIcon>
                 <ListItemText
                   primary={user.accountname}
-                  secondary={`ID: ${user.accountid} • Risk: ${user.risktolerance}`}
+                  secondary={`• Risk: ${user.risktolerance}`}
                 />
               </ListItem>
             ))}
