@@ -1,14 +1,20 @@
+.markdown-message p {
+  margin: 0;
+}
+
 .cs-message--incoming .cs-message__content {
     color: white;
     background-color: #c8042c;
     opacity: 0.5;
     border-radius: 0 0.7em 0.7em 0;
+    padding: 8px 12px
 }
 
 .cs-message--outgoing .cs-message__content {
     color: white;
     background-color: #c8042c;
     border-radius: 0 0.7em 0.7em 0;
+    padding: 8px 12px
 }
 
 .cs-main-container {

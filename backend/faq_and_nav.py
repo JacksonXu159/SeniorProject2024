@@ -128,7 +128,7 @@ def rag_and_nav_agent(input_query, frontend_url, threshold=0.5):
     
     elif nav_row and nav_score >= threshold:
         print(nav_row[3])
-        return f'You can find this information here <a href="/{nav_row[3]}" target="_blank" style="color:blue; text-decoration:underline;">Click here for more details</a>'
+        return f'You can find this information [here]({nav_row[3]})'
         
     return "I'm sorry, I couldn't find an answer to that question."
 
