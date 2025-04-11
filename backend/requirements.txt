@@ -11,3 +11,4 @@ psycopg2-binary
 langchain-community
 langchain-openai
 faiss-cpu
+pandas
