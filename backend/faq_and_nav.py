@@ -121,9 +121,9 @@ def rag_and_nav_agent(input_query, frontend_url, threshold=0.5):
     nav_row, nav_score = search_table(input_query, 0)
     
     if faq_row and faq_score >= threshold:
-        response = f"Answer: {faq_row[2]}" 
+        response = f"{faq_row[2]}" 
         if faq_row[3]:  
-            response += f"\nYou can find more information here: {faq_row[3]}"
+            response += f"\nYou can find more information [here]({faq_row[3]})"
         return response
     
     elif nav_row and nav_score >= threshold:

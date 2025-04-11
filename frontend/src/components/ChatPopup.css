@@ -1,6 +1,27 @@
-.markdown-message p {
-  margin: 0;
-}
+.markdown-message {
+    width: 100%;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    white-space: normal;
+  }
+  
+  .markdown-message p {
+    margin: 0.5em 0;
+  }
+  
+  .markdown-message ul, .markdown-message ol {
+    margin: 0.5em 0;
+    padding-left: 1.5em;
+  }
+  
+  .markdown-message li {
+    margin: 0.25em 0;
+  }
+  
+  .markdown-message h1, .markdown-message h2, .markdown-message h3,
+  .markdown-message h4, .markdown-message h5, .markdown-message h6 {
+    margin: 0.5em 0;
+  }
 
 .cs-message--incoming .cs-message__content {
     color: white;

@@ -10,7 +10,7 @@ import {
   TypingIndicator,
 } from "@chatscope/chat-ui-kit-react";
 import "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";
-import ReactMarkdown from 'react-markdown';
+import ReactMarkdown from "react-markdown";
 
 import "./ChatPopup.css";
 import useGenAI from "../hooks/useGenAI";
@@ -43,7 +43,7 @@ let boxStyle = {
 const MarkdownMessage = ({ content }) => {
   return (
     <div className="markdown-message">
-      <ReactMarkdown>{content}</ReactMarkdown>
+      <ReactMarkdown rehypePlugins={[]}>{content}</ReactMarkdown>
     </div>
   );
 };
@@ -101,8 +101,8 @@ function ChatPopUp({}) {
     <>
       {isChatOpen && (
         <Box sx={boxStyle}>
-          <MainContainer>
-            <ChatContainer>
+          <MainContainer style={{ height: "100%" }}>
+            <ChatContainer style={{ padding: "10px" }}>
               <MessageList
                 typingIndicator={
                   typing ? <TypingIndicator content="Bot is typing" /> : null
