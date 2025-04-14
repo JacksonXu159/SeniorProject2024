@@ -91,6 +91,10 @@ function ChatPopUp({}) {
     <>
       {isChatOpen && (
         <Box sx={boxStyle}>
+          <div className="chat-header">
+            Chat Assistant
+            <button className="chat-close-btn" onClick={toggleChat}>✖</button>
+          </div>
           <MainContainer>
             <ChatContainer>
               <MessageList
