@@ -41,7 +41,20 @@ Use this data to provide finanical advice and answer their question"""
 
     return f"{input_query}\n\n{user_profile}"
 
+def generate_financial_advice(text, user_profile):
+    prompt = f"""
+    Based on the following financial article, provide **actionable financial advice** tailored to this user's profile.
+    **Article:** {text}
 
+    **User Profile:**
+    {user_profile}
+
+    Provide a **clear, professional financial strategy**, specific to the user’s risk tolerance, balance, and age.
+    The advice should be based on the user's risk tolerance, especially when it is asking what to invest in.
+    Keep it concise, insightful, and actionable. The advice can give reccomendations on what VANGUARD etfs, stocks
+    to invest in, but it should NOT give specific stock picks or trading recommendations from other companies. 
+    """
+    return llm.invoke(prompt).content
 
 def financial_advisor_agent(input_query, threshold=0.5):
     """
@@ -71,9 +84,12 @@ def financial_advisor_agent(input_query, threshold=0.5):
         if result:
             title, article, link, distance = result
             article = summarize_article(article)
+            advice = generate_financial_advice(article, personalize_financial_query)
 
             advisor_response = (
                 f"**Financial Advisor Insights**\n\n"
+                f"Potential Advice: {advice}\n\n"
+                f"Here is a summary of an article related to your question:\n"
                 f"**{title}**\n\n"
                 f"{article}\n\n"
                 f"[Click here to learn more.]({link})\n\n"
