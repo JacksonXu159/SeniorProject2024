@@ -5,12 +5,13 @@ from langchain.agents import (
     Tool,
     AgentExecutor,
 )
-from financial_advisor_rag import financial_advisor_agent
+
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 
+from agents.financial_advisor_rag import financial_advisor_agent
 from agents.rag_general_info import user_data_agent_func
-
-from faq_and_nav import rag_and_nav_agent
+from agents.faq_and_nav import rag_and_nav_agent
+from agents.live_agent import live_agent_chain
 
 CHATBOT_AGENT_MODEL = os.getenv("CHATBOT_AGENT_MODEL")
 
@@ -44,13 +45,18 @@ tools = [
         - risk tolerance (query with 'risk tolerance')
         - services (query with 'services')"""
     ),
-    # Tool(
-    #     name="Consultant",
-    #     func=assistant_chain.invoke,
-    #     description="""Useful when you need to answer general finance-related questions. 
-    #     Not useful for any data or user-specific questions such as account balance, statements,
-    #     user's investments, etc."""
-    # ),
+    Tool(
+        name="LiveAgent",
+        func=live_agent_chain.invoke,
+        description="""
+            Use only when the chat history or the current message shows clear indicators of insatisfaction with automated responses
+            Including:
+            - Explicitly asking to speak to a live agent
+            - Repetitive questions
+            - Significant frustation or dissatisfaction
+            This will simulate the conversation with a live agent that is aware of the previous messages
+        """
+    ),
     Tool(
         name="NavAndFaq",
         func=lambda query: rag_and_nav_agent(query, 0.5),
