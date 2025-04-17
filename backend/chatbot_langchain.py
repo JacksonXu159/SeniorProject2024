@@ -49,11 +49,7 @@ tools = [
         name="LiveAgent",
         func=live_agent_chain.invoke,
         description="""
-            Use only when the chat history or the current message shows clear indicators of insatisfaction with automated responses
-            Including:
-            - Explicitly asking to speak to a live agent
-            - Repetitive questions
-            - Significant frustation or dissatisfaction
+            Only use this tool if live_agent_status is "On" | NEVER use it if live_agent_status is "Off"
             This will simulate the conversation with a live agent that is aware of the previous messages
         """
     ),
@@ -88,9 +84,11 @@ tools = [
     **Do NOT give specific stock picks or trading recommendations.**    """
     )
 ]
+
 chatbot_agent_prompt = ChatPromptTemplate.from_messages(
     [
         ("system", "You are a helpful chatbot assistant."),
+        ("system", "Live Agent is currently {live_agent_status}."),
         ("system", "Here is the conversation history so far: {chat_history}"),
         MessagesPlaceholder("chat_history"),
         ("human", "User said previously: {chat_history}. Now the user says: {input}"),

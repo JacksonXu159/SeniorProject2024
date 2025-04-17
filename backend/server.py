@@ -2,10 +2,10 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
-from chat_handler import process_message
+from utils.chat_handler import process_message
 import asyncio
 from chatbot_langchain import chatbot_agent_executor, set_user_id 
-from queries import get_user_info, get_all_users, get_user_services # Added imports
+from utils.queries import get_user_info, get_all_users, get_user_services # Added imports
 
 load_dotenv()
 

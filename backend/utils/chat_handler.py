@@ -11,6 +11,8 @@ def process_message(user_message: str, frontend_url: str):
     # Retrieve existing chat history
     raw_chat_history = chat_histories[session_id]
 
+    live_agent = "Off"
+
     # Convert chat history to LangChain format
     chat_history = []
     for entry in raw_chat_history:
@@ -25,7 +27,8 @@ def process_message(user_message: str, frontend_url: str):
     input_data = {
         "input": user_message,
         "frontendUrl": frontend_url,
-        "chat_history": chat_history
+        "chat_history": chat_history,
+        "live_agent_status": live_agent,
     }
 
     print(f"Final input to chatbot_agent_executor: {input_data}")

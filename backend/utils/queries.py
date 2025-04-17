@@ -1,6 +1,6 @@
 import psycopg2
 from psycopg2.extras import DictCursor
-from database import connection_pool
+from utils.database import connection_pool
 
 def get_user_info(user_id):
     """

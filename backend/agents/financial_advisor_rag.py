@@ -1,8 +1,8 @@
 from dotenv import load_dotenv
 from langchain_openai import OpenAIEmbeddings
-from database import connection_pool
+from utils.database import connection_pool
 from langchain_openai import ChatOpenAI
-from queries import get_user_info
+from utils.queries import get_user_info
 llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0)
 
 load_dotenv()
