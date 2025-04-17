@@ -58,7 +58,7 @@ docker-compose down
 
 ### 🌐 Access the App
 
-- Frontend:	http://localhost:3000
+- Frontend:	http://localhost
 - Backend:	http://localhost:8000/docs
 
 ### Make sure to change the URL in frontend/src/config.js for local development
