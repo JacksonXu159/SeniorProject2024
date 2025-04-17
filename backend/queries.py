@@ -12,7 +12,7 @@ def get_user_info(user_id):
         with conn.cursor(cursor_factory=DictCursor) as cursor:
             # Fetch user account details
             cursor.execute("""
-                SELECT accountname, gender, age, risktolerance, maritalstatus
+                SELECT accountname, gender, age, risktolerance, maritalstatus, taxfilingstatus, taxfilingincomebracket, taxfilingstate, estimatedretirementage, spendingvariationtolerance, shorttermlosssensitivity
                 FROM Accounts
                 WHERE accountID = %s
             """, (user_id,))
@@ -40,6 +40,12 @@ def get_user_info(user_id):
                 "age": account_data["age"],
                 "risktolerance": account_data["risktolerance"],
                 "maritalstatus": account_data["maritalstatus"],
+                "taxFilingStatus": account_data["taxfilingstatus"],
+                "taxFilingIncomeBracket": account_data["taxfilingincomebracket"],
+                "taxFilingState": account_data["taxfilingstate"],
+                "estimatedRetirementAge": account_data["estimatedretirementage"],
+                "spendingVariationTolerance": account_data["spendingvariationtolerance"],
+                "shortTermLossSensitivity": account_data["shorttermlosssensitivity"],  # CamelCase Fix
                 "totalBalance": total_balance,
                 "portfolios": [{"portfolioType": p["portfoliotype"], "balance": p["balance"]} for p in portfolios],
                 "services": [service["name"] for service in services]
