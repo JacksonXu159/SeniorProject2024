@@ -63,3 +63,63 @@
 .cs-button--attachment {
     color: #c8042c;
 }
+
+.cs-message-list {
+    max-height: 350px;
+    overflow-y: auto;
+    scrollbar-width: thin; 
+    scrollbar-color: #c8042c #ffffff; 
+}
+
+.cs-message-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.cs-message-list::-webkit-scrollbar-track {
+    background: #ffffff;
+}
+
+.cs-message-list::-webkit-scrollbar-thumb {
+    background-color: #c8042c;
+    border-radius: 3px;
+}
+
+.chat-header {
+    background-color: #c8042c;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 10px 10px 0 0;
+}
+
+.chat-header {
+    background-color: #c8042c;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 10px 10px 0 0;
+}
+
+.chat-close-btn {
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s ease-in-out;
+}
+
+.chat-close-btn:hover {
+    color: #ffaaaa;
+}
