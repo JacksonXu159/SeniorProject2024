@@ -10,6 +10,8 @@ import {
   TypingIndicator,
 } from "@chatscope/chat-ui-kit-react";
 import "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";
+import ReactMarkdown from "react-markdown";
+
 import "./ChatPopup.css";
 import useGenAI from "../hooks/useGenAI";
 import { useUserStore } from "../hooks/useUserStore";
@@ -38,8 +40,16 @@ let boxStyle = {
   display: "block",
 };
 
+const MarkdownMessage = ({ content }) => {
+  return (
+    <div className="markdown-message">
+      <ReactMarkdown rehypePlugins={[]}>{content}</ReactMarkdown>
+    </div>
+  );
+};
+
 function ChatPopUp({}) {
-  const { userId, userData, fetchUserData} = useUserStore();
+  const { userId, userData, fetchUserData } = useUserStore();
 
   const [messages, setMessages] = useState([
     {
@@ -66,7 +76,7 @@ function ChatPopUp({}) {
   const handleSend = async (message) => {
     setTyping(true);
     const response = await sendMessage(message, userId);
-    console.log(response)
+    console.log(response);
     const newUserMessage = {
       message: message,
       sender: "user",
@@ -95,8 +105,8 @@ function ChatPopUp({}) {
             Chat Assistant
             <button className="chat-close-btn" onClick={toggleChat}>✖</button>
           </div>
-          <MainContainer>
-            <ChatContainer>
+          <MainContainer style={{ height: "100%" }}>
+            <ChatContainer style={{ padding: "10px" }}>
               <MessageList
                 typingIndicator={
                   typing ? <TypingIndicator content="Bot is typing" /> : null
@@ -107,12 +117,15 @@ function ChatPopUp({}) {
                     <Message
                       key={i}
                       model={{
-                        message: message.message,
                         sender: message.sender,
                         direction: message.direction,
                         position: "single",
                       }}
-                    />
+                    >
+                      <Message.CustomContent>
+                        <MarkdownMessage content={message.message} />
+                      </Message.CustomContent>
+                    </Message>
                   );
                 })}
               </MessageList>

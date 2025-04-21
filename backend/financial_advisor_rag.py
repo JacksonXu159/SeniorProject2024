@@ -2,18 +2,56 @@ from dotenv import load_dotenv
 from langchain_openai import OpenAIEmbeddings
 from database import connection_pool
 from langchain_openai import ChatOpenAI
-
+from queries import get_user_info
 llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0)
 
 load_dotenv()
 
 embeddings = OpenAIEmbeddings()
 
+def personalize_financial_query(input_query):
+    from chatbot_langchain import get_current_user_id
+    user_data = get_user_info(get_current_user_id())
+    user_profile = ""
+    if not user_data:
+        return input_query
+    print(user_data)
+    portfolio_info = "\n".join([f"- {p['portfolioType']}: ${p['balance']:,.2f}" for p in user_data.get("portfolios", [])])
+    user_profile = f"""This is the user's profile:
+- Name: {user_data["accountName"]}
+- Age: {user_data["age"]}
+- Gender: {user_data["gender"]}
+- Balance: {user_data["totalBalance"]:,.2f}
+- Risk Tolerance: {user_data["risktolerance"]}
+- Marital Status: {user_data["maritalstatus"]}
+- Tax Filing Status: {user_data["taxFilingStatus"]}
+- Income Bracket: {user_data["taxFilingIncomeBracket"]}
+- Tax Filing State: {user_data["taxFilingState"]}
+- Estimated Retirement Age: {user_data["estimatedRetirementAge"]}
+- Spending Variation Tolerance: {user_data["spendingVariationTolerance"]}
+- Short-Term Loss Sensitivity: {user_data["shortTermLossSensitivity"]}
+-Portfolios:
+{portfolio_info}
+Use this data to provide finanical advice and answer their question"""
+
+    return f"{input_query}\n\n{user_profile}"
+
 def summarize_article(text):
     """Summarizes the article to make it short and chat-friendly."""
-    summary_prompt = f"Summarize the following article in 3-5 sentences, sounding professional:\n\n{text}"
+    summary_prompt = f"Summarize the following article in 2-4 sentences, make it short, concise, and sounds professional:\n\n{text}"
     return llm.invoke(summary_prompt).content
 
+def generate_financial_advice(text, user_profile):
+    prompt = f"""
+    Based on the following financial article, provide **actionable financial advice** tailored to this user's profile.
+    **Article:** {text}
+
+    **User Profile:**
+    {user_profile}
+
+    Focus on their **risk tolerance** (low, medium, high) and balance. Suggest VANGUARD ETFs or strategies, but avoid specific stock picks. Keep it **short, clear, professional**, and under 350 characters.
+    """
+    return llm.invoke(prompt).content
 
 def financial_advisor_agent(input_query, threshold=0.5):
     """
@@ -23,7 +61,9 @@ def financial_advisor_agent(input_query, threshold=0.5):
         conn = connection_pool.getconn()
         cursor = conn.cursor()
 
-        query_embedding = embeddings.embed_query(input_query)
+        personalized_query = personalize_financial_query(input_query)
+
+        query_embedding = embeddings.embed_query(personalized_query)
 
         cursor.execute("""
             SELECT title, article, link, embedding <=> %s::vector AS distance
@@ -41,9 +81,12 @@ def financial_advisor_agent(input_query, threshold=0.5):
         if result:
             title, article, link, distance = result
             article = summarize_article(article)
+            advice = generate_financial_advice(article, personalize_financial_query)
 
             advisor_response = (
                 f"**Financial Advisor Insights**\n\n"
+                f"Potential Advice: {advice}\n\n"
+                f"Here is a summary of an article related to your question:\n"
                 f"**{title}**\n\n"
                 f"{article}\n\n"
                 f"[Click here to learn more.]({link})\n\n"
@@ -66,7 +109,7 @@ def financial_advisor_agent(input_query, threshold=0.5):
 
 if __name__ == "__main__":
     # quick manual test
-    user_question = input("Ask your financial question: ")
+    user_question = input("Ask your financial question:\n")
     response = financial_advisor_agent(user_question)
     print("\nResponse:\n")
     print(response)

@@ -60,21 +60,26 @@ tools = [
     - Where are my transactions?
     - How do I view my account statements?
     - Where can I update my profile?
-    **Do NOT use for general finance topics like IRAs, investing, retirement, etc.**
+    - What are stocks?
+    - How does investing work?
+    - What is a mutual fund?
+    **Do NOT use for personalized financial advice or investment strategies** (e.g., IRA tax benefits, portfolio allocation)**
     """
     ),
     Tool(
         name="FinancialAdvisorLookup",
         func=lambda query: financial_advisor_agent(query),
         return_direct=True,
-        description="""Use for answering finance-related concept questions such as:
+        description="""Use for **advanced financial concepts and personalized investment strategy such as: **.
     - diversification
     - expense ratios
     - IRA contributions
     - retirement withdrawals
     - risk tolerance
     - Roth IRA vs Traditional IRA
-    """
+    - investment strategy that best fits my risk tolerence
+    **Do NOT use for general finance definitions** like "What are stocks?" or "How does investing work?"
+    **Do NOT give specific stock picks or trading recommendations.**    """
     )
 ]
 chatbot_agent_prompt = ChatPromptTemplate.from_messages(

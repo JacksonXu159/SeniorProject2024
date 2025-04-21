@@ -1,36 +1,65 @@
-# Thinking Beyond Rich User Interfaces - Senior Project 2024-2025
+# 🧠 Thinking Beyond Rich User Interfaces – Senior Project 2024–2025
 
-## Overview
+## 💡 Overview
 
-This project focuses on replacing traditional financial platforms that have rich, detailed user interfaces with a Google-like search interface/conversational AI tool.
-The goal is to allow clients to ask questions and receive answers based on any FAQs, navigation on their account, or about their financial data. This approach aims to improve user experience and reduce dependency on live support agents.
- 
-## Features
+This project replaces traditional financial platforms with a **Google-like conversational AI** interface. Instead of navigating complex dashboards, users can simply ask questions and receive intelligent, contextual answers.
 
--   **Conversational Interface**: Clients can ask questions in natural language and receive clear, detailed answers.
--   **Personalized Insights**: Provides tailored answers based on user information.
--   **Efficiency**: Reduces time spent navigating websites by focusing on delivering answers quickly.
+The system provides:
+- Natural-language Q&A over **FAQs**, **account navigation**, and **personal financial data**
+- A user-friendly interface designed to **reduce dependency on live support**
 
-## Agents
+---
 
--   **FAQ and Navigation Assistant**: handle queries related to where services are located or finace related questions.
--   **User Retrieval**: retrieve user financial data, such as martial status or portfolio numbers, etc.
--   **Services**: handles queries related to services or the services the user has.
+## ✨ Features
 
-## Setup
+- **Conversational Interface**  
+  Ask questions in plain English and get answers instantly.
 
-1. Clone repo
-2. Cd into ./backend
-3. Start a python virtual env `python -m venv ./myvenv`
-4. Acitvate venv `./myvenv/Scripts/activate`
-    - For macOS/Linux (zsh or bash) `source myvenv/bin/activate`
-    - For For Windows (Git Bash or WSL) `source myvenv/Scripts/activate`
-5. Install dependencies `pip install -r requirements.txt`
-6. Run `uvicorn server:app --reload` to start server
-7. In a different terminal, cd into ./frontend and install dependencies `npm i `
-8. Open a new terminal
-9. Cd into ./frontend
-10. To Test locally: Open useGenAI.js and change const url to `http://localhost:8000/message`
-    - Make sure to change it back to what it was originally when you're done
-11. Run `npm i`
-12. Run `npm run dev`
+- **Personalized Insights**  
+  Responses are tailored to user data.
+
+- **Efficiency**  
+  Skip menus—get straight to the information you need.
+
+---
+
+## 🧠 AI Agents
+
+| Agent              | Role                                                                 |
+|-------------------|----------------------------------------------------------------------|
+| `FAQ and Navigation` | Answers questions about services or platform navigation             |
+| `User Retrieval`     | Provides financial data (e.g., marital status, portfolio numbers)   |
+| `Services`           | Answers queries related to what services a user has or can access   |
+
+---
+
+## 🐳 How to Run the App with Docker
+
+This project uses **Docker Compose** to run the backend (FastAPI) and frontend (Vite + React).
+
+### 🧱 Prerequisites
+
+- [Docker Desktop](https://www.docker.com/products/docker-desktop)
+
+---
+
+### ▶️ Start the App
+
+From the root directory (where `docker-compose.yml` is located), run:
+```bash
+docker-compose up --build
+```
+
+### ⏸️ Stop the App
+
+```bash
+docker-compose down
+```
+
+### 🌐 Access the App
+
+- Frontend:	http://localhost
+- Backend:	http://localhost:8000/docs
+
+### Make sure to change the URL in frontend/src/config.js for local development
+
