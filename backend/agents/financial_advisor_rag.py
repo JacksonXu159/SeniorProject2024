@@ -1,17 +1,16 @@
 from dotenv import load_dotenv
 from langchain_openai import OpenAIEmbeddings
-from database import connection_pool
+from utils.database import connection_pool
 from langchain_openai import ChatOpenAI
-from queries import get_user_info
+from utils.queries import get_user_info
 llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0)
 
 load_dotenv()
 
 embeddings = OpenAIEmbeddings()
 
-def personalize_financial_query(input_query):
-    from chatbot_langchain import get_current_user_id
-    user_data = get_user_info(get_current_user_id())
+def personalize_financial_query(input_query, user_id):
+    user_data = get_user_info(user_id)
     user_profile = ""
     if not user_data:
         return input_query
@@ -53,7 +52,7 @@ def generate_financial_advice(text, user_profile):
     """
     return llm.invoke(prompt).content
 
-def financial_advisor_agent(input_query, threshold=0.5):
+def financial_advisor_agent(input_query, user_id, threshold=0.5):
     """
     Retrieves financial advice from the database based on semantic similarity and returns a professional response.
     """
@@ -61,7 +60,7 @@ def financial_advisor_agent(input_query, threshold=0.5):
         conn = connection_pool.getconn()
         cursor = conn.cursor()
 
-        personalized_query = personalize_financial_query(input_query)
+        personalized_query = personalize_financial_query(input_query, user_id)
 
         query_embedding = embeddings.embed_query(personalized_query)
 

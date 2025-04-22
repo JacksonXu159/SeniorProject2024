@@ -18,7 +18,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from agents.assistant import assistant_chain
 from dotenv import load_dotenv
-from queries import (
+from utils.queries import (
     get_user_info,
     get_user_balance,
     get_user_services,
