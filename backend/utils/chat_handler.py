@@ -11,7 +11,9 @@ class ChatHandler:
         session_id = frontend_url
         
         # Set the user ID in the chatbot
-        self.chatbot.set_user_id(user_id)
+        if user_id != self.chatbot.get_current_user_id():
+            self.chat_histories[session_id] = []  # Clear history for new user
+            self.chatbot.set_user_id(user_id)
 
         # Retrieve existing chat history
         raw_chat_history = self.chat_histories[session_id]
