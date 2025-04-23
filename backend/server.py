@@ -2,12 +2,16 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
-from utils.chat_handler import process_message
 import asyncio
-from chatbot_langchain import chatbot_agent_executor, set_user_id 
-from utils.queries import get_user_info, get_all_users, get_user_services # Added imports
+from utils.queries import get_user_info, get_all_users, get_user_services
+from chatbot_langchain import ChatbotLangchain
+from utils.chat_handler import ChatHandler
 
 load_dotenv()
+
+# Initialize the chatbot and chat handler
+chatbot = ChatbotLangchain()
+chat_handler = ChatHandler(chatbot)
 
 class UserRequest(BaseModel):
     user_id: str
@@ -42,8 +46,11 @@ async def root():
 
 @app.post("/message/")
 async def create_message(message: Message):
-    set_user_id(message.userId)
-    bot_response = process_message(message.message, message.frontendUrl)
+    bot_response = chat_handler.process_message(
+        message.message, 
+        message.frontendUrl,
+        message.userId
+    )
 
     return MessageResponse(
         message=bot_response,

@@ -9,14 +9,8 @@ load_dotenv()
 
 embeddings = OpenAIEmbeddings()
 
-def summarize_article(text):
-    """Summarizes the article to make it short and chat-friendly."""
-    summary_prompt = f"Summarize the following article in 3-5 sentences, sounding professional:\n\n{text}"
-    return llm.invoke(summary_prompt).content
-
-def personalize_financial_query(input_query):
-    from chatbot_langchain import get_current_user_id
-    user_data = get_user_info(get_current_user_id())
+def personalize_financial_query(input_query, user_id):
+    user_data = get_user_info(user_id)
     user_profile = ""
     if not user_data:
         return input_query
@@ -41,6 +35,11 @@ Use this data to provide finanical advice and answer their question"""
 
     return f"{input_query}\n\n{user_profile}"
 
+def summarize_article(text):
+    """Summarizes the article to make it short and chat-friendly."""
+    summary_prompt = f"Summarize the following article in 2-4 sentences, make it short, concise, and sounds professional:\n\n{text}"
+    return llm.invoke(summary_prompt).content
+
 def generate_financial_advice(text, user_profile):
     prompt = f"""
     Based on the following financial article, provide **actionable financial advice** tailored to this user's profile.
@@ -49,14 +48,11 @@ def generate_financial_advice(text, user_profile):
     **User Profile:**
     {user_profile}
 
-    Provide a **clear, professional financial strategy**, specific to the user’s risk tolerance, balance, and age.
-    The advice should be based on the user's risk tolerance, especially when it is asking what to invest in.
-    Keep it concise, insightful, and actionable. The advice can give reccomendations on what VANGUARD etfs, stocks
-    to invest in, but it should NOT give specific stock picks or trading recommendations from other companies. 
+    Focus on their **risk tolerance** (low, medium, high) and balance. Suggest VANGUARD ETFs or strategies, but avoid specific stock picks. Keep it **short, clear, professional**, and under 350 characters.
     """
     return llm.invoke(prompt).content
 
-def financial_advisor_agent(input_query, threshold=0.5):
+def financial_advisor_agent(input_query, user_id, threshold=0.5):
     """
     Retrieves financial advice from the database based on semantic similarity and returns a professional response.
     """
@@ -64,7 +60,7 @@ def financial_advisor_agent(input_query, threshold=0.5):
         conn = connection_pool.getconn()
         cursor = conn.cursor()
 
-        personalized_query = personalize_financial_query(input_query)
+        personalized_query = personalize_financial_query(input_query, user_id)
 
         query_embedding = embeddings.embed_query(personalized_query)
 
@@ -112,7 +108,7 @@ def financial_advisor_agent(input_query, threshold=0.5):
 
 if __name__ == "__main__":
     # quick manual test
-    user_question = input("Ask your financial question: ")
+    user_question = input("Ask your financial question:\n")
     response = financial_advisor_agent(user_question)
     print("\nResponse:\n")
     print(response)
