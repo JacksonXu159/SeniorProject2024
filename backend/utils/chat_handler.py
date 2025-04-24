@@ -1,6 +1,7 @@
 from collections import defaultdict
 from langchain_core.messages import HumanMessage, AIMessage
 from agents.live_agent import LiveAgentChat
+from utils.message_analyzer import MessageAnalyzer
 
 class ChatHandler:
     def __init__(self, chatbot):
@@ -9,6 +10,8 @@ class ChatHandler:
         self.chatbot = chatbot
         self.live_agent_status = False
         self.live_agent = LiveAgentChat()
+        self.message_analyzer = MessageAnalyzer()  # Initialize the MessageAnalyzer
+        self.waiting_for_live_agent_response = defaultdict(bool)  # Track if we're waiting for a response about live agent
     
     def process_message(self, user_message: str, frontend_url: str, user_id: str):
         session_id = frontend_url
@@ -17,9 +20,31 @@ class ChatHandler:
         if user_id != self.chatbot.get_current_user_id():
             self.chat_histories[session_id] = []  # Clear history for new user
             self.chatbot.set_user_id(user_id)
+            self.waiting_for_live_agent_response[session_id] = False
 
         # Retrieve existing chat history
         raw_chat_history = self.chat_histories[session_id]
+
+        # Check if we're waiting for a response about live agent
+        if self.waiting_for_live_agent_response[session_id]:
+            # Check if user accepted the live agent
+            if self.message_analyzer.check_for_live_agent_acceptance(user_message):
+                self.live_agent_status = True
+                bot_message = "You're now connected with a live agent. How can I help you today?"
+            else:
+                bot_message = "I'll continue to assist you. What can I help you with?"
+            
+            # No longer waiting for response
+            self.waiting_for_live_agent_response[session_id] = False
+            
+            # Append to raw chat history
+            raw_chat_history.append({"role": "human", "content": user_message})
+            raw_chat_history.append({"role": "ai", "content": bot_message})
+            
+            # Store updated history
+            self.chat_histories[session_id] = raw_chat_history
+            
+            return bot_message
 
         # Convert chat history to LangChain format
         chat_history = []
@@ -30,6 +55,20 @@ class ChatHandler:
                 chat_history.append(AIMessage(content=entry["content"]))
 
         print(f"Converted chat history for LangChain (Session {session_id}): {chat_history}")
+
+        # Analyze sentiment and check if live agent should be offered
+        if not self.live_agent_status and self.message_analyzer.should_offer_live_agent(user_message):
+            bot_message = self.message_analyzer.format_live_agent_proposal()
+            self.waiting_for_live_agent_response[session_id] = True
+            
+            # Append to raw chat history
+            raw_chat_history.append({"role": "human", "content": user_message})
+            raw_chat_history.append({"role": "ai", "content": bot_message})
+            
+            # Store updated history
+            self.chat_histories[session_id] = raw_chat_history
+            
+            return bot_message
 
         # Prepare input data for chatbot
         input_data = {
@@ -74,5 +113,10 @@ class ChatHandler:
         """Clear the chat history for a specific session"""
         if session_id in self.chat_histories:
             self.chat_histories[session_id] = []
+            self.waiting_for_live_agent_response[session_id] = False
             return True
         return False
+    
+    def reset_live_agent_status(self):
+        """Reset the live agent status back to AI chatbot"""
+        self.live_agent_status = False
