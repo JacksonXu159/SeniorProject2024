@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Box, Button, Typography } from "@mui/material";
 import ChatIcon from "@mui/icons-material/Chat";
 import {
@@ -97,13 +97,23 @@ function ChatPopUp({}) {
     setTyping(false);
   };
 
+  useEffect(() => {
+    setMessages([{
+      message: "Hi",
+      sender: "Bot",
+      direction: "incoming",
+    }]);
+  }, [userId]);
+
   return (
     <>
       {isChatOpen && (
         <Box sx={boxStyle}>
           <div className="chat-header">
             Chat Assistant
-            <button className="chat-close-btn" onClick={toggleChat}>✖</button>
+            <button className="chat-close-btn" onClick={toggleChat}>
+              ✖
+            </button>
           </div>
           <MainContainer style={{ height: "100%" }}>
             <ChatContainer style={{ padding: "10px" }}>
