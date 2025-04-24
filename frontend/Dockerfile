@@ -18,6 +18,7 @@ RUN npm run build
 # Use an Nginx server to serve the built frontend
 FROM nginx:alpine
 COPY --from=0 /app/dist /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Expose port 80
 EXPOSE 80
