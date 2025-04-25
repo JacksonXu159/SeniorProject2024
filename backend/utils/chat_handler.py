@@ -30,12 +30,28 @@ class ChatHandler:
             # Check if user accepted the live agent
             if self.message_analyzer.check_for_live_agent_acceptance(user_message):
                 self.live_agent_status = True
-                bot_message = "You're now connected with a live agent. How can I help you today?"
+                bot_message = '''You're now connected with a live agent.
+                    **Live Agent - Sarah**
+                    How can I help you today?'''
             else:
                 bot_message = "I'll continue to assist you. What can I help you with?"
             
             # No longer waiting for response
             self.waiting_for_live_agent_response[session_id] = False
+            
+            # Append to raw chat history
+            raw_chat_history.append({"role": "human", "content": user_message})
+            raw_chat_history.append({"role": "ai", "content": bot_message})
+            
+            # Store updated history
+            self.chat_histories[session_id] = raw_chat_history
+            
+            return bot_message
+
+        # Check if user wants to end live agent session
+        if self.live_agent_status and self.message_analyzer.check_for_live_agent_termination(user_message):
+            self.live_agent_status = False
+            bot_message = "Live agent session has ended. You're now connected with the AI assistant again. How can I help you?"
             
             # Append to raw chat history
             raw_chat_history.append({"role": "human", "content": user_message})

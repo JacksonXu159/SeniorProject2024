@@ -40,3 +40,21 @@ class MessageAnalyzer:
                 return True
         
         return False
+        
+    def check_for_live_agent_termination(self, user_message):
+        """
+        Check if the user wants to end the live agent session.
+        Returns True if the user wants to end the session, False otherwise.
+        """
+        message = user_message.lower().strip()
+        termination_phrases = [
+            "end session", "end chat", "disconnect", "i'm done", "im done", 
+            "that's all", "thats all", "goodbye", "bye", "exit live agent", 
+            "switch back", "return to ai", "back to bot", "i'm finished", "im finished"
+        ]
+        
+        for phrase in termination_phrases:
+            if phrase in message:
+                return True
+        
+        return False
