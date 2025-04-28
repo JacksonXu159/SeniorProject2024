@@ -5,15 +5,6 @@ from langchain.agents import (
     Tool,
     AgentExecutor,
 )
-from langchain.prompts import (
-    PromptTemplate,
-    SystemMessagePromptTemplate,
-    HumanMessagePromptTemplate,
-    ChatPromptTemplate,
-)
-
-from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
-
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 
 from agents.financial_advisor_rag import financial_advisor_agent
@@ -40,7 +31,7 @@ class ChatbotLangchain:
             ),
             Tool(
                 name="NavAndFaq",
-                func=lambda query: self._nav_and_faq_wrapper(query),
+                func=lambda query: rag_and_nav_agent(query, 0.5),
                 return_direct=True,
                 description="""Use for **navigational or FAQ-related questions only**.
             Examples:
@@ -74,9 +65,6 @@ class ChatbotLangchain:
         self.chatbot_agent_prompt = ChatPromptTemplate.from_messages(
             [
                 ("system", "You are a helpful chatbot assistant."),
-                ("system", """You are a helpful chatbot assistant. Think through your responses step by step.
-                    When using tools, explain your reasoning before and after using them.
-                    Be thorough in your explanations and show your work."""),
                 ("system", "Live Agent is currently {live_agent_status}."),
                 ("system", "Here is the conversation history so far: {chat_history}"),
                 MessagesPlaceholder("chat_history"),
@@ -86,12 +74,8 @@ class ChatbotLangchain:
         )
         
         # Initialize chat model
-        self.chat_model = ChatOpenAI(
-            model="gpt-4o-mini",
-            temperature=0,
-            streaming=True,
-        )        
-                
+        self.chat_model = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+        
         # Create agent and executor
         self._initialize_agent()
     
@@ -129,18 +113,6 @@ class ChatbotLangchain:
     def _user_data_agent_wrapper(self, query):
         """Wrapper for the user data agent to use the current user ID"""
         return user_data_agent_func(self.current_user_id, query)
-    
-    def _nav_and_faq_wrapper(self, query):
-        """Wrapper for the nav and FAQ agent to extract frontendUrl from input data"""
-        # Extract frontendUrl from the query if it's a dictionary
-        frontend_url = "http://localhost:5173"  # Default value
-        if isinstance(query, dict) and "frontendUrl" in query:
-            frontend_url = query.get("frontendUrl")
-            # Extract the actual query text
-            query = query.get("input", query)
-        
-        # Call the rag_and_nav_agent with the query and frontendUrl
-        return rag_and_nav_agent(query, frontend_url, 0.5)
     
     async def ainvoke(self, input_data):
         """Async invocation of the agent executor"""
