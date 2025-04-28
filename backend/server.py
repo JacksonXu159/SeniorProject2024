@@ -3,12 +3,16 @@ from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 from page_suggestions import get_page_suggestions
-from chat_handler import process_message
 import asyncio
-from chatbot_langchain import chatbot_agent_executor, set_user_id 
-from queries import get_user_info, get_all_users, get_user_services # Added imports
+from utils.queries import get_user_info, get_all_users, get_user_services
+from chatbot_langchain import ChatbotLangchain
+from utils.chat_handler import ChatHandler
 
 load_dotenv()
+
+# Initialize the chatbot and chat handler
+chatbot = ChatbotLangchain()
+chat_handler = ChatHandler(chatbot)
 
 class UserRequest(BaseModel):
     user_id: str
@@ -16,14 +20,12 @@ class UserRequest(BaseModel):
 class Message(BaseModel):
     message: str
     frontendUrl: str
-    currentPath: str 
     userId: str
     
 class MessageResponse(BaseModel):
     message: str
     sender: str = "Bot"
     direction: str = "incoming"
-    suggestions: list[str] = []
 
 class ServicesResponse(BaseModel):
     services: list[str]
@@ -45,17 +47,16 @@ async def root():
 
 @app.post("/message/")
 async def create_message(message: Message):
-    set_user_id(message.userId)
-    print(f"Received message request with URL: {message.frontendUrl}")  # Debug print
-    
-    response = process_message(message.message, message.frontendUrl, message.currentPath)
-    print(f"Processed response: {response}")  # Debug print
+    bot_response = chat_handler.process_message(
+        message.message, 
+        message.frontendUrl,
+        message.userId
+    )
 
     return MessageResponse(
-        message=response["message"],
+        message=bot_response,
         sender="Bot",
-        direction="incoming",
-        suggestions=response["suggestions"]
+        direction="incoming"
     )
 
 @app.post("/get_user/")
