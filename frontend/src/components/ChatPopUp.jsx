@@ -61,27 +61,35 @@ function ChatPopUp({}) {
   };
 
   const handleSend = async (message) => {
-    setTyping(true);
-    const response = await sendMessage(message);
-    console.log(response)
     const newUserMessage = {
-      message: message,
+      message,
       sender: "user",
       direction: "outgoing",
     };
 
-    if (response) {
-      const botResponse = {
-        message: response.message,
-        sender: "Bot",
-        direction: "incoming",
-      };
-      setMessages([...messages, newUserMessage, botResponse]);
-    } else {
-      setMessages([...messages, newUserMessage]);
-    }
+    setMessages((prev) => [...prev, newUserMessage]);
+    setTyping(true);
 
-    setTyping(false);
+    let botMessage = { message: "", sender: "Bot", direction: "incoming" };
+
+    setMessages((prev) => [...prev, botMessage]);
+
+    try {
+      await sendMessage(message, (partialResponse) => {
+        setMessages((prev) => {
+          const updated = [...prev];
+          updated[updated.length - 1] = {
+            ...botMessage,
+            message: partialResponse,
+          };
+          return updated;
+        });
+      });
+    } catch (err) {
+      console.error("Streaming error:", err);
+    } finally {
+      setTyping(false);
+    }
   };
 
   return (
