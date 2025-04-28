@@ -75,34 +75,46 @@ function ChatPopUp({}) {
 
   const handleSend = async (message) => {
     setTyping(true);
-    const response = await sendMessage(message, userId);
-    console.log(response);
+
+    // Add user message to the chat
     const newUserMessage = {
-      message: message,
+      message,
       sender: "user",
       direction: "outgoing",
     };
+    setMessages((prev) => [...prev, newUserMessage]);
 
-    if (response) {
-      const botResponse = {
-        message: response.message,
-        sender: "Bot",
-        direction: "incoming",
-      };
-      setMessages([...messages, newUserMessage, botResponse]);
-    } else {
-      setMessages([...messages, newUserMessage]);
+    // Create an empty bot message that will be updated with partial responses
+    let botMessage = { message: "", sender: "Bot", direction: "incoming" };
+    setMessages((prev) => [...prev, botMessage]);
+
+    try {
+      // Call sendMessage once with the callback to update the UI
+      await sendMessage(message, userId, (partialResponse) => {
+        setMessages((prev) => {
+          const updated = [...prev];
+          updated[updated.length - 1] = {
+            ...botMessage,
+            message: partialResponse,
+          };
+          return updated;
+        });
+      });
+    } catch (err) {
+      console.error("Streaming error:", err);
+    } finally {
+      setTyping(false);
     }
-
-    setTyping(false);
   };
 
   useEffect(() => {
-    setMessages([{
-      message: "Hi",
-      sender: "Bot",
-      direction: "incoming",
-    }]);
+    setMessages([
+      {
+        message: "Hi",
+        sender: "Bot",
+        direction: "incoming",
+      },
+    ]);
   }, [userId]);
 
   return (
