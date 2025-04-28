@@ -37,10 +37,10 @@ Use this data to provide finanical advice and answer their question"""
 
 def summarize_article(text):
     """Summarizes the article to make it short and chat-friendly."""
-    summary_prompt = f"Summarize the following article in 2-4 sentences, make it short, concise, and sounds professional:\n\n{text}"
+    summary_prompt = f"Summarize the following article in less then 350 characters, make it short, concise, and sounds professional:\n\n{text}"
     return llm.invoke(summary_prompt).content
 
-def generate_financial_advice(text, user_profile):
+def generate_financial_advice(text, user_profile, fund_recommendations):
     prompt = f"""
     Based on the following financial article, provide **actionable financial advice** tailored to this user's profile.
     **Article:** {text}
@@ -48,9 +48,60 @@ def generate_financial_advice(text, user_profile):
     **User Profile:**
     {user_profile}
 
-    Focus on their **risk tolerance** (low, medium, high) and balance. Suggest VANGUARD ETFs or strategies, but avoid specific stock picks. Keep it **short, clear, professional**, and under 350 characters.
+    Focus on their **risk tolerance** (low, medium, high) and balance, and their fund recommendations, but avoid specific stock picks. Keep it **short, clear, professional**, and under 350 characters.
+    **Fund Recommendations:**
+    {fund_recommendations}
     """
     return llm.invoke(prompt).content
+
+def get_fund_recommendations(query_embedding, threshold=0.5):
+    try:
+        conn = connection_pool.getconn()
+        cursor = conn.cursor()
+
+        cursor.execute("""
+            SELECT symbol, name, asset_class, risk, expense_ratio, compare, transact, sec_yield, ytd, one_year, five_year, ten_year, since_inception, investment_minimum, price, change, embedding <=> %s::vector AS distance
+            FROM vanguard_funds
+            ORDER BY embedding <=> %s::vector
+            LIMIT 3
+        """, (query_embedding, query_embedding))
+
+
+        results = cursor.fetchall()
+
+        cursor.close()
+        connection_pool.putconn(conn)
+        if results:
+            fund_recommendations = []
+            for row in results:
+                symbol, name, asset_class, risk, expense_ratio, compare, transact, sec_yield, ytd, one_year, five_year, ten_year, since_inception, investment_minimum, price, change, distance = row
+                if distance <= threshold:
+                    fund_recommendations.append(f"""
+                    - **Symbol**: {symbol}
+                    - **Name**: {name}
+                    - **Asset Class**: {asset_class}
+                    - **Risk**: {risk}
+                    - **Expense Ratio**: {expense_ratio}
+                    - **SEC Yield**: {sec_yield}
+                    - **YTD**: {ytd}
+                    - **1-Year**: {one_year}
+                    - **5-Year**: {five_year}
+                    - **10-Year**: {ten_year}
+                    - **Since Inception**: {since_inception}
+                    - **Investment Minimum**: {investment_minimum}
+                    - **Price**: {price}
+                    - **Change**: {change}
+                    """)
+
+            return "\n".join(fund_recommendations)
+
+        else:
+            return "I'm sorry, I couldn't find any related information."
+
+    except Exception as e:
+        print(f"Error in financial_advisor_agent: {e}")
+        return "I'm sorry, something went wrong while retrieving the information."
+
 
 def financial_advisor_agent(input_query, user_id, threshold=0.5):
     """
@@ -80,7 +131,9 @@ def financial_advisor_agent(input_query, user_id, threshold=0.5):
         if result:
             title, article, link, distance = result
             article = summarize_article(article)
-            advice = generate_financial_advice(article, personalize_financial_query)
+            fund_reccomendations = get_fund_recommendations(query_embedding)
+            
+            advice = generate_financial_advice(article, personalized_query, fund_reccomendations)
 
             advisor_response = (
                 f"**Financial Advisor Insights**\n\n"
