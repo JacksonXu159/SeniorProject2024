@@ -13,6 +13,9 @@ from langchain.prompts import (
     HumanMessagePromptTemplate,
     ChatPromptTemplate,
 )
+
+from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
+
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 
 from agents.assistant import assistant_chain
@@ -20,6 +23,7 @@ from agents.assistant import assistant_chain
 from agents.rag_general_info import user_data_agent_func, user_services_agent_func
 
 from faq_and_nav import rag_and_nav_agent
+
 
 CHATBOT_AGENT_MODEL = os.getenv("CHATBOT_AGENT_MODEL")
 tmpID = "5e655314-c264-4999-83ad-67c43cc6db5b"
@@ -45,7 +49,7 @@ tools = [
     Tool(
         name="NavAndFaq",
         func=lambda query: rag_and_nav_agent(query, 0.5),
-        return_direct = True,
+        # return_direct = True,
         description="""User for handling queries related where services are located or finace related questions.
         Examples:
         - Where are my transactions?
@@ -55,15 +59,20 @@ tools = [
 ]
 chatbot_agent_prompt = ChatPromptTemplate.from_messages(
     [
-        ("system", "You are a helpful chatbot assistant"),
+        ("system", """You are a helpful chatbot assistant. Think through your responses step by step.
+        When using tools, explain your reasoning before and after using them.
+        Be thorough in your explanations and show your work."""),
         MessagesPlaceholder("chat_history", optional=True),
         ("human", "{input}"),
         MessagesPlaceholder("agent_scratchpad"),
     ]
 )
 
-chat_model = ChatOpenAI(model="gpt-4o-mini", temperature=0)
-
+chat_model = ChatOpenAI(
+    model="gpt-4o-mini",
+    temperature=0,
+    streaming=True,
+)
 chatbot_agent = create_openai_functions_agent(
     llm=chat_model,
     prompt=chatbot_agent_prompt,
@@ -78,7 +87,7 @@ chatbot_agent_executor = AgentExecutor(
 )
 
 async def main():
-    input_data = {"input": "What are bonds?"}
+    input_data = {"input": "What are stocks"}
     result = await chatbot_agent_executor.ainvoke(input_data)
     print(result)
 
