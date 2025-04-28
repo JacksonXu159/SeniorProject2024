@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
+from page_suggestions import get_page_suggestions
 from chat_handler import process_message
 import asyncio
 from chatbot_langchain import chatbot_agent_executor, set_user_id 
@@ -15,12 +16,14 @@ class UserRequest(BaseModel):
 class Message(BaseModel):
     message: str
     frontendUrl: str
+    currentPath: str 
     userId: str
     
 class MessageResponse(BaseModel):
     message: str
     sender: str = "Bot"
     direction: str = "incoming"
+    suggestions: list[str] = []
 
 class ServicesResponse(BaseModel):
     services: list[str]
@@ -43,12 +46,16 @@ async def root():
 @app.post("/message/")
 async def create_message(message: Message):
     set_user_id(message.userId)
-    bot_response = process_message(message.message, message.frontendUrl)
+    print(f"Received message request with URL: {message.frontendUrl}")  # Debug print
+    
+    response = process_message(message.message, message.frontendUrl, message.currentPath)
+    print(f"Processed response: {response}")  # Debug print
 
     return MessageResponse(
-        message=bot_response,
+        message=response["message"],
         sender="Bot",
-        direction="incoming"
+        direction="incoming",
+        suggestions=response["suggestions"]
     )
 
 @app.post("/get_user/")
@@ -71,3 +78,9 @@ async def fetch_user_services(user_id: str):
     if services is None:
         raise HTTPException(status_code=500, detail="Error fetching user services")
     return ServicesResponse(services=services)
+
+@app.post("/get_suggestions/{url}")
+async def fetch_suggestions(url: str):
+    print("suggestion url: ", url)
+    suggestions = get_page_suggestions(url)
+    return suggestions

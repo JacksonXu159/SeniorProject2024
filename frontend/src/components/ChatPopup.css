@@ -40,6 +40,7 @@
 
 .cs-main-container {
     border: solid 2px #c8042c;
+    
 }
 .cs-message-input__content-editor-wrapper {
     background-color: #ffffff;
@@ -97,19 +98,6 @@
     border-radius: 10px 10px 0 0;
 }
 
-.chat-header {
-    background-color: #c8042c;
-    color: white;
-    font-size: 18px;
-    font-weight: bold;
-    text-align: center;
-    padding: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-radius: 10px 10px 0 0;
-}
-
 .chat-close-btn {
     background: transparent;
     border: none;
@@ -122,4 +110,46 @@
 
 .chat-close-btn:hover {
     color: #ffaaaa;
+}
+
+.suggestions-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px;
+    background-color: white;
+    border-bottom: 1px solid #ccc;
+}
+
+.nav-button {
+    padding: 8px 12px;
+    background-color: white;
+    color: #c8042c;
+    border: 1px solid #c8042c;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.nav-button:hover {
+    background-color: #fff5f5;
+}
+
+.suggestion-button {
+    padding: 8px 16px;
+    border: 1px solid #c8042c;
+    border-radius: 20px;
+    background-color: white;
+    color: #c8042c;
+    text-align: center;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-height: 3.5em; 
+    max-height: 3.5em;
+}
+
+.suggestion-button:hover {
+    background-color: #fff5f5;
 }
