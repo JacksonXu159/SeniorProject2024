@@ -41,6 +41,34 @@ let boxStyle = {
 };
 
 const MarkdownMessage = ({ content }) => {
+  // Check if the content contains thinking markers
+  if (content.includes("[THINKING]")) {
+    // Split the content by the thinking markers
+    const parts = content.split(/\[THINKING\]|\[\/THINKING\]/);
+
+    return (
+      <div className="markdown-message">
+        {parts.map((part, index) => {
+          // Even indices are regular text, odd indices are thinking text
+          if (index % 2 === 0) {
+            return (
+              <ReactMarkdown key={index} rehypePlugins={[]}>
+                {part}
+              </ReactMarkdown>
+            );
+          } else {
+            return (
+              <span key={index} className="thinking-text">
+                {part}
+              </span>
+            );
+          }
+        })}
+      </div>
+    );
+  }
+
+  // If no thinking markers, just render as markdown
   return (
     <div className="markdown-message">
       <ReactMarkdown rehypePlugins={[]}>{content}</ReactMarkdown>
@@ -89,14 +117,37 @@ function ChatPopUp({}) {
     setMessages((prev) => [...prev, botMessage]);
 
     try {
-      // Call sendMessage once with the callback to update the UI
-      await sendMessage(message, userId, (partialResponse) => {
+      // Call sendMessage with the callback to update the UI
+      await sendMessage(message, userId, (partialResponse, isThinking) => {
         setMessages((prev) => {
           const updated = [...prev];
-          updated[updated.length - 1] = {
-            ...botMessage,
-            message: partialResponse,
-          };
+
+          if (isThinking) {
+            // Update the thinking message
+            updated[updated.length - 1] = {
+              ...botMessage,
+              message: partialResponse,
+              isThinking: true,
+            };
+          } else {
+            // If we're not in thinking mode and this is the first answer message
+            if (!updated[updated.length - 1].isThinking) {
+              // Update the existing message
+              updated[updated.length - 1] = {
+                ...botMessage,
+                message: partialResponse,
+                isThinking: false,
+              };
+            } else {
+              // Add a new message for the answer
+              updated.push({
+                ...botMessage,
+                message: partialResponse,
+                isThinking: false,
+              });
+            }
+          }
+
           return updated;
         });
       });
@@ -144,7 +195,7 @@ function ChatPopUp({}) {
                         position: "single",
                       }}
                     >
-                      <Message.CustomContent>
+                      <Message.CustomContent data-thinking={message.isThinking}>
                         <MarkdownMessage content={message.message} />
                       </Message.CustomContent>
                     </Message>

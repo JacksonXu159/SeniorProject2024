@@ -45,7 +45,8 @@ async def stream_agent_response(websocket, message):
         callbacks=[handler],
     )
 
-    await websocket.send_text("🤔 Thinking...\n")
+    # Use a special marker for the initial thinking message
+    await websocket.send_text("[THINKING]🤔 Thinking...[/THINKING]\n")
     
     # Provide the missing variables required by the prompt template
     input_data = {
@@ -55,11 +56,17 @@ async def stream_agent_response(websocket, message):
     }
     
     try:
+        # The handler will send the response token by token
         result = await agent_with_streaming.ainvoke(input_data)
         
-        # Send the final result if it's not already sent by the handler
-        if result and "output" in result:
-            await websocket.send_text(result["output"])
+        # If the result contains an output and it's different from what we've already sent
+        if result and "output" in result and result["output"] != handler.current_output:
+            # Send a marker to indicate the end of thinking and start of answer if not already sent
+            if not handler.thinking_complete:
+                await websocket.send_text("[END_THINKING]")
+                handler.thinking_complete = True
+                
+            await websocket.send_text(f"\n{result['output']}\n")
     except Exception as e:
         print(f"Error in stream_agent_response: {e}")
         await websocket.send_text(f"Error: {str(e)}")

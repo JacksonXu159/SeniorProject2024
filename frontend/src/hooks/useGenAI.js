@@ -16,6 +16,9 @@ const useGenAI = () => {
       const socket = new WebSocket("ws://127.0.0.1:8000/ws/chat");
 
       let fullMessage = "";
+      let thinkingMessage = "";
+      let answerMessage = "";
+      let isThinking = true;
 
       socket.onopen = () => {
         const frontendUrl = window.location.origin;
@@ -33,10 +36,31 @@ const useGenAI = () => {
           setLoading(false);
           resolve({ message: fullMessage });
           socket.close();
-        } else {
-          fullMessage += event.data;
+        } else if (event.data === "[END_THINKING]") {
+          // Switch from thinking to answer mode
+          isThinking = false;
+          // Send the thinking message to the UI
           if (onTokenReceived) {
-            onTokenReceived(fullMessage); // Send partial update to UI
+            onTokenReceived(thinkingMessage, true);
+          }
+        } else {
+          // Accumulate the full message
+          fullMessage += event.data;
+
+          // If in thinking mode, accumulate thinking message
+          if (isThinking) {
+            thinkingMessage += event.data;
+            // Send partial update to UI for thinking
+            if (onTokenReceived) {
+              onTokenReceived(thinkingMessage, true);
+            }
+          } else {
+            // In answer mode, accumulate answer message
+            answerMessage += event.data;
+            // Send partial update to UI for answer
+            if (onTokenReceived) {
+              onTokenReceived(answerMessage, false);
+            }
           }
         }
       };

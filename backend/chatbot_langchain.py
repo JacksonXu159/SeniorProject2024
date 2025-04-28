@@ -140,7 +140,10 @@ class ChatbotLangchain:
             query = query.get("input", query)
         
         # Call the rag_and_nav_agent with the query and frontendUrl
-        return rag_and_nav_agent(query, frontend_url, 0.5)
+        result = rag_and_nav_agent(query, frontend_url, 0.5)
+        # Debug print only in development
+        # print(f"NavAndFaq tool result: {result}")
+        return result
     
     async def ainvoke(self, input_data):
         """Async invocation of the agent executor"""
