@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
+from page_suggestions import get_page_suggestions
 import asyncio
 from utils.queries import get_user_info, get_all_users, get_user_services
 from chatbot_langchain import ChatbotLangchain
@@ -78,3 +79,9 @@ async def fetch_user_services(user_id: str):
     if services is None:
         raise HTTPException(status_code=500, detail="Error fetching user services")
     return ServicesResponse(services=services)
+
+@app.post("/get_suggestions/{url}")
+async def fetch_suggestions(url: str):
+    print("suggestion url: ", url)
+    suggestions = get_page_suggestions(url)
+    return suggestions
