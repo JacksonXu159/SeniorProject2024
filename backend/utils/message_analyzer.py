@@ -11,10 +11,10 @@ class MessageAnalyzer:
         
         # Default termination phrases by language
         self.termination_phrases= {
-                'end_commands': ['end session', 'end chat', 'disconnect', 'exit live agent', 'exit live session'],
-                'done_indicators': ['im done', "i'm done", 'im finished', "i'm finished", "done", "finished", 'quit'],
-                'closure_phrases': ['thats all', "that's all", 'goodbye', 'bye'],
-                'switch_requests': ['switch back', 'return to ai', 'back to bot', "back to ai", 'back to chatbot', 'return to bot'],
+                'end_commands': ['end session', 'end chat', 'disconnect', 'exit live agent', 'exit live session', "stop live agent", 'stop live session', 'end live agent', 'end live session', 'stop live chat', 'end live chat', 'exit live chat'],
+                'done_indicators': ['im done', "i'm done", 'im finished', "i'm finished", "done", "finished", 'quit', 'stop', 'no more', 'no longer', 'no longer need', 'no more help', 'no more assistance', 'no more questions', 'no more inquiries'],
+                'closure_phrases': ['thats all', "that's all", 'goodbye', 'bye', 'see you', 'farewell', 'take care', 'thank you', 'thanks', 'appreciate it', 'thank you for your help', 'thank you for your assistance', 'thank you for your time', 'thank you for your support'],
+                'switch_requests': ['switch back', 'return to ai', 'back to bot', "back to ai", 'back to chatbot', 'return to bot', 'return to chatbot', 'switch back to ai', 'switch back to bot', 'switch back to chatbot', 'switch back to the bot', 'switch back to the ai'],
         }
         
         # Compile regex pattern upon initialization
