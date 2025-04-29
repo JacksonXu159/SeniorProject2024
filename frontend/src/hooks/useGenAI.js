@@ -12,29 +12,34 @@ const useGenAI = () => {
     const sendMessage = async (userMessage, userId) => {
         setLoading(true);
         setError(null);
-        const frontendUrl = window.location.origin;
+        const frontendUrl = window.location.origin;      // e.g. "https://app.example.com"
+        const currentPath   = window.location.pathname;    // e.g. "/transactions"
+        console.log("Frontend URL:", frontendUrl);
+        console.log("Current path:", currentPath);
     
-        const messageJSON = { 
+        const messageJSON = {
             message: userMessage,
-            frontendUrl: frontendUrl,
-            userId: userId
-        };
+            frontendUrl,
+            currentPath, 
+            userId,
+          };
+        
+        console.log("Sending request with:", messageJSON);
     
         try {
             const response = await axios.post(url, messageJSON);
+            console.log("Received response:", response.data);
             setData(response.data);
             return response.data;
         } catch (err) {
             setError(err);
-            console.error(err);
+            console.error("Error in sendMessage:", err);
             return null;
         } finally {
             setLoading(false);
         }
     };
     
-    
-
     return { sendMessage, data, error, loading };
 };
 
