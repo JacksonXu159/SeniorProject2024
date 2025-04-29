@@ -1,8 +1,45 @@
+import re
+import json
+import os
 from textblob import TextBlob
 
 class MessageAnalyzer:
-    def __init__(self):
-        self.sentiment_threshold = -0.3  # Negative sentiment threshold
+    def __init__(self, language='en'):
+        """Initialize MessageAnalyzer with optional config path and language setting."""
+        self.sentiment_threshold = -0.6  # Negative sentiment threshold
+        self.language = language
+        
+        # Default termination phrases by language
+        self.termination_phrases= {
+                'end_commands': ['end session', 'end chat', 'disconnect', 'exit live agent', 'exit live session'],
+                'done_indicators': ['im done', "i'm done", 'im finished', "i'm finished", "done", "finished", 'quit'],
+                'closure_phrases': ['thats all', "that's all", 'goodbye', 'bye'],
+                'switch_requests': ['switch back', 'return to ai', 'back to bot', "back to ai", 'back to chatbot', 'return to bot'],
+        }
+        
+        # Compile regex pattern upon initialization
+        self.termination_pattern = self._compile_termination_pattern()
+
+    def _compile_termination_pattern(self):
+        """Compile all termination phrases into a single regex pattern."""
+        # Flatten the dictionary into a single list
+        all_phrases = []
+        for category in self.termination_phrases.values():
+            all_phrases.extend(category)
+        
+        # Process each phrase for regex
+        regex_parts = []
+        for phrase in all_phrases:
+            # Replace spaces with \s+ to match any whitespace
+            processed = phrase.replace(' ', r'\s+')
+            # Add optional apostrophes for words with apostrophes
+            processed = processed.replace("'", r"'?")
+            regex_parts.append(processed)
+        
+        # Join all parts with | and wrap in word boundaries
+        pattern = r'\b(' + '|'.join(regex_parts) + r')\b'
+        
+        return re.compile(pattern, re.IGNORECASE)  # Add IGNORECASE flag for case insensitivity
 
     def analyze_sentiment(self, text):
         """
@@ -43,18 +80,13 @@ class MessageAnalyzer:
         
     def check_for_live_agent_termination(self, user_message):
         """
-        Check if the user wants to end the live agent session.
+        Check if the user wants to end the live agent session using regex.
         Returns True if the user wants to end the session, False otherwise.
         """
-        message = user_message.lower().strip()
-        termination_phrases = [
-            "end session", "end chat", "disconnect", "i'm done", "im done", 
-            "that's all", "thats all", "goodbye", "bye", "exit live agent", 
-            "switch back", "return to ai", "back to bot", "i'm finished", "im finished"
-        ]
-        
-        for phrase in termination_phrases:
-            if phrase in message:
-                return True
-        
-        return False
+        message = user_message.strip()  # No need for .lower() with re.IGNORECASE
+        return bool(self.termination_pattern.search(message))
+    
+    def set_sentiment_threshold(self, threshold):
+        """Set the sentiment threshold for offering live agent."""
+        self.sentiment_threshold = threshold
+        return True
