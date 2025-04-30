@@ -5,25 +5,12 @@ from sklearn.metrics.pairwise import cosine_similarity
 from dotenv import load_dotenv
 from langchain_openai import OpenAIEmbeddings
 from langchain_community.vectorstores import FAISS
+from utils.database import connection_pool
 
 load_dotenv()
 
-PGHOST = os.getenv("PGHOST")
-PGDATABASE = os.getenv("PGDATABASE")
-PGUSER = os.getenv("PGUSER")
-PGPASSWORD = os.getenv("PGPASSWORD")
-ENDPOINT = os.getenv('ENDPOINT')
-
-conn = psycopg2.connect(
-    host=PGHOST,
-    database=PGDATABASE,
-    user=PGUSER,
-    password=PGPASSWORD,
-    port=5432,
-    sslmode="require",
-    options=f"endpoint={ENDPOINT}" 
-)
-cursor = conn.cursor()
+# conn = conn = connection_pool.getconn()
+# cursor = conn.cursor()
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
@@ -36,6 +23,9 @@ def search_table_once(table_name):
     Searches for the best matching row in both tables using TF-IDF vectorization and cosine similarity between the expanded user query and the question.
     """
     
+    conn = connection_pool.getconn()
+    cursor = conn.cursor()
+
     if table_name == "faq_embeddings":
         cursor.execute("SELECT id, question, answer FROM faq_embeddings")
     else:
@@ -83,6 +73,9 @@ def search_table(input_query, is_faq):
     Searches for the best matching row based on keywords and refines results with TF-IDF and cosine similarity.
     """
     query_keywords = extract_keywords_tfidf(input_query)
+
+    conn = connection_pool.getconn()
+    cursor = conn.cursor()
 
     cursor.execute("""
         SELECT id, question, answer, link, faq
