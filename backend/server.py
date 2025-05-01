@@ -8,6 +8,7 @@ from utils.queries import get_user_info, get_all_users, get_user_services
 from chatbot_langchain import ChatbotLangchain, WebSocketStreamHandler
 from utils.chat_handler import ChatHandler
 from langchain.agents import AgentExecutor
+from typing import Optional
 
 load_dotenv()
 
@@ -120,10 +121,12 @@ async def fetch_user_services(user_id: str):
         raise HTTPException(status_code=500, detail="Error fetching user services")
     return ServicesResponse(services=services)
 
-@app.post("/get_suggestions/{url}")
-async def fetch_suggestions(url: str):
+@app.post("/get_suggestions/{url:path}") 
+async def fetch_suggestions(url: Optional[str] = ""):
     print("suggestion url: ", url)
     suggestions = get_page_suggestions(url)
+    if not suggestions:
+        raise HTTPException(status_code=404, detail="No suggestions found")
     return suggestions
 
 

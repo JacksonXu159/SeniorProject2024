@@ -16,6 +16,7 @@ import "./ChatPopup.css";
 import useGenAI from "../hooks/useGenAI";
 import { useUserStore } from "../hooks/useUserStore";
 import getSuggestionList from "../hooks/getSuggestionList";
+import { useLocation } from "react-router-dom";
 
 const style = {
   background: "#c8042c",
@@ -75,6 +76,7 @@ export default function ChatPopUp() {
   const { getSuggestions } = getSuggestionList();
   const [systemMessages, setSystemMessages] = useState([]);
   const [toolMessages, setToolMessages] = useState([]);
+  const location = useLocation();
 
   const handleSuggestions = async (url) => {
     console.log("getting suggestions");
@@ -171,6 +173,13 @@ export default function ChatPopUp() {
       },
     ]);
   }, [userId]);
+
+    useEffect(() => {
+        if (isChatOpen) {
+            handleSuggestions();
+        }
+    }, [location.pathname, isChatOpen]);
+    
 
   return (
     <>

@@ -1,4 +1,4 @@
-# 🧠 Thinking Beyond Rich User Interfaces – Senior Project 2024–2025
+# 🧠 Thinking Beyond Rich User Interfaces (AskVanguard) – Senior Project 2024–2025
 
 ## 💡 Overview
 
