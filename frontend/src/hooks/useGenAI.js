@@ -1,46 +1,80 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import axios from "axios";
-import { API_URL } from '../config'
-
-const url = `${API_URL}/message/`; 
+import { API_URL } from "../config";
 
 const useGenAI = () => {
-    const [data, setData] = useState(null);
-    const [error, setError] = useState(null);
-    const [loading, setLoading] = useState(false);
+  const [data, setData] = useState(null);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const wsRef = useRef(null);
+  const onCompleteRef = useRef(null);
 
-    const sendMessage = async (userMessage, userId) => {
-        setLoading(true);
-        setError(null);
-        const frontendUrl = window.location.origin;      // e.g. "https://app.example.com"
-        const currentPath   = window.location.pathname;    // e.g. "/transactions"
-        console.log("Frontend URL:", frontendUrl);
-        console.log("Current path:", currentPath);
-    
-        const messageJSON = {
-            message: userMessage,
-            frontendUrl,
-            currentPath, 
-            userId,
-          };
-        
-        console.log("Sending request with:", messageJSON);
-    
-        try {
-            const response = await axios.post(url, messageJSON);
-            console.log("Received response:", response.data);
-            setData(response.data);
-            return response.data;
-        } catch (err) {
-            setError(err);
-            console.error("Error in sendMessage:", err);
-            return null;
-        } finally {
-            setLoading(false);
-        }
+  useEffect(() => {
+    // Initialize WebSocket connection
+    wsRef.current = new WebSocket(
+      `ws://${API_URL.replace("http://", "")}/ws/chat`
+    );
+
+    wsRef.current.onopen = () => {
+      console.log("WebSocket connected");
     };
-    
-    return { sendMessage, data, error, loading };
+
+    wsRef.current.onerror = (error) => {
+      console.error("WebSocket error:", error);
+      setError(error);
+    };
+
+    wsRef.current.onclose = () => {
+      console.log("WebSocket closed");
+    };
+
+    return () => {
+      if (wsRef.current) {
+        wsRef.current.close();
+      }
+    };
+  }, []);
+
+  const sendMessage = async (message, onPartialResponse) => {
+    setLoading(true);
+    setError(null);
+
+    if (!wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) {
+      setError(new Error("WebSocket not connected"));
+      setLoading(false);
+      return;
+    }
+
+    try {
+      // Send the message
+      wsRef.current.send(message);
+
+      // Set up message handler for streaming
+      const messageHandler = (event) => {
+        if (event.data === "[END]") {
+          wsRef.current.removeEventListener("message", messageHandler);
+          setLoading(false);
+          if (onCompleteRef.current) {
+            onCompleteRef.current();
+          }
+        } else {
+          onPartialResponse(event.data);
+        }
+      };
+
+      wsRef.current.addEventListener("message", messageHandler);
+    } catch (err) {
+      setError(err);
+      console.error("Error in sendMessage:", err);
+      setLoading(false);
+    }
+  };
+
+  const setOnComplete = (callback) => {
+    onCompleteRef.current = callback;
+  };
+
+  return { sendMessage, data, error, loading, setOnComplete };
 };
 
 export default useGenAI;

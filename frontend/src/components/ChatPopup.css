@@ -1,155 +1,197 @@
 .markdown-message {
-    width: 100%;
-    overflow-wrap: break-word;
-    word-wrap: break-word;
-    white-space: normal;
-  }
-  
-  .markdown-message p {
-    margin: 0.5em 0;
-  }
-  
-  .markdown-message ul, .markdown-message ol {
-    margin: 0.5em 0;
-    padding-left: 1.5em;
-  }
-  
-  .markdown-message li {
-    margin: 0.25em 0;
-  }
-  
-  .markdown-message h1, .markdown-message h2, .markdown-message h3,
-  .markdown-message h4, .markdown-message h5, .markdown-message h6 {
-    margin: 0.5em 0;
-  }
+  width: 100%;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  white-space: normal;
+}
+
+.markdown-message p {
+  margin: 0.5em 0;
+}
+
+.markdown-message ul,
+.markdown-message ol {
+  margin: 0.5em 0;
+  padding-left: 1.5em;
+}
+
+.markdown-message li {
+  margin: 0.25em 0;
+}
+
+.markdown-message h1,
+.markdown-message h2,
+.markdown-message h3,
+.markdown-message h4,
+.markdown-message h5,
+.markdown-message h6 {
+  margin: 0.5em 0;
+}
 
 .cs-message--incoming .cs-message__content {
-    color: white;
-    background-color: #c8042c;
-    opacity: 0.5;
-    border-radius: 0 0.7em 0.7em 0;
-    padding: 8px 12px
+  color: white;
+  background-color: #c8042c;
+  opacity: 0.5;
+  border-radius: 0 0.7em 0.7em 0;
+  padding: 8px 12px;
 }
 
 .cs-message--outgoing .cs-message__content {
-    color: white;
-    background-color: #c8042c;
-    border-radius: 0 0.7em 0.7em 0;
-    padding: 8px 12px
+  color: white;
+  background-color: #c8042c;
+  border-radius: 0 0.7em 0.7em 0;
+  padding: 8px 12px;
 }
 
 .cs-main-container {
-    border: solid 2px #c8042c;
-    
+  border: solid 2px #c8042c;
 }
 .cs-message-input__content-editor-wrapper {
-    background-color: #ffffff;
-    border: solid 1px #c8042c;
+  background-color: #ffffff;
+  border: solid 1px #c8042c;
 }
 .cs-message-input__content-editor {
-    background-color: #ffffff;
+  background-color: #ffffff;
 }
 
 .cs-typing-indicator__text {
-    color: #c8042c;
+  color: #c8042c;
 }
 
 .cs-typing-indicator__dot {
-    color: #c8042c;
-    background-color: #c8042c;
+  color: #c8042c;
+  background-color: #c8042c;
 }
 .cs-button--send {
-    color: #c8042c;
+  color: #c8042c;
 }
 .cs-button--attachment {
-    color: #c8042c;
+  color: #c8042c;
 }
 
 .cs-message-list {
-    max-height: 350px;
-    overflow-y: auto;
-    scrollbar-width: thin; 
-    scrollbar-color: #c8042c #ffffff; 
+  max-height: 350px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #c8042c #ffffff;
 }
 
 .cs-message-list::-webkit-scrollbar {
-    width: 6px;
+  width: 6px;
 }
 
 .cs-message-list::-webkit-scrollbar-track {
-    background: #ffffff;
+  background: #ffffff;
 }
 
 .cs-message-list::-webkit-scrollbar-thumb {
-    background-color: #c8042c;
-    border-radius: 3px;
+  background-color: #c8042c;
+  border-radius: 3px;
 }
 
 .chat-header {
-    background-color: #c8042c;
-    color: white;
-    font-size: 18px;
-    font-weight: bold;
-    text-align: center;
-    padding: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-radius: 10px 10px 0 0;
+  background-color: #c8042c;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 10px 10px 0 0;
 }
 
 .chat-close-btn {
-    background: transparent;
-    border: none;
-    color: white;
-    font-size: 20px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: color 0.3s ease-in-out;
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: color 0.3s ease-in-out;
 }
 
 .chat-close-btn:hover {
-    color: #ffaaaa;
+  color: #ffaaaa;
 }
 
 .suggestions-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 8px;
-    background-color: white;
-    border-bottom: 1px solid #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px;
+  background-color: white;
+  border-bottom: 1px solid #ccc;
 }
 
 .nav-button {
-    padding: 8px 12px;
-    background-color: white;
-    color: #c8042c;
-    border: 1px solid #c8042c;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.2s ease;
+  padding: 8px 12px;
+  background-color: white;
+  color: #c8042c;
+  border: 1px solid #c8042c;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .nav-button:hover {
-    background-color: #fff5f5;
+  background-color: #fff5f5;
 }
 
 .suggestion-button {
-    padding: 8px 16px;
-    border: 1px solid #c8042c;
-    border-radius: 20px;
-    background-color: white;
-    color: #c8042c;
-    text-align: center;
-    font-size: 14px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    min-height: 3.5em; 
-    max-height: 3.5em;
+  padding: 8px 16px;
+  border: 1px solid #c8042c;
+  border-radius: 20px;
+  background-color: white;
+  color: #c8042c;
+  text-align: center;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: 3.5em;
+  max-height: 3.5em;
 }
 
 .suggestion-button:hover {
-    background-color: #fff5f5;
+  background-color: #fff5f5;
+}
+
+.system-message {
+  display: flex;
+  justify-content: center;
+  margin: 8px 0;
+  width: 100%;
+}
+
+.system-message-content {
+  background-color: rgba(128, 128, 128, 0.1);
+  color: #666;
+  padding: 8px 16px;
+  border-radius: 16px;
+  font-size: 0.9em;
+  font-style: italic;
+  max-width: 80%;
+  text-align: center;
+  backdrop-filter: blur(2px);
+}
+
+.tool-message {
+  display: flex;
+  justify-content: center;
+  margin: 8px 0;
+  width: 100%;
+}
+
+.tool-message-content {
+  background-color: rgba(200, 4, 44, 0.1);
+  color: #c8042c;
+  padding: 8px 16px;
+  border-radius: 16px;
+  font-size: 0.9em;
+  font-weight: 500;
+  max-width: 80%;
+  text-align: center;
+  backdrop-filter: blur(2px);
 }

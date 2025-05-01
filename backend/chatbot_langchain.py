@@ -11,6 +11,25 @@ from agents.financial_advisor_rag import financial_advisor_agent
 from agents.rag_general_info import user_data_agent_func
 from agents.faq_and_nav import rag_and_nav_agent
 
+from langchain.callbacks.base import AsyncCallbackHandler
+
+class WebSocketStreamHandler(AsyncCallbackHandler):
+    def __init__(self, websocket):
+        self.websocket = websocket
+
+    async def on_llm_new_token(self, token: str, **kwargs):
+        """Handle new token from LLM"""
+        try:
+            await self.websocket.send_text(token)
+        except Exception as e:
+            print(f"Error sending token: {e}")
+
+    async def on_llm_end(self, response, **kwargs):
+        """Handle end of LLM response"""
+        try:
+            await self.websocket.send_text("[END]")
+        except Exception as e:
+            print(f"Error sending end token: {e}")
 
 class ChatbotLangchain:
     def __init__(self):
@@ -74,7 +93,7 @@ class ChatbotLangchain:
         )
         
         # Initialize chat model
-        self.chat_model = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+        self.chat_model = ChatOpenAI(model="gpt-4o-mini", temperature=0, streaming=True)
         
         # Create agent and executor
         self._initialize_agent()
