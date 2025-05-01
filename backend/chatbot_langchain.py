@@ -84,7 +84,6 @@ class ChatbotLangchain:
         self.chatbot_agent_prompt = ChatPromptTemplate.from_messages(
             [
                 ("system", "You are a helpful chatbot assistant."),
-                ("system", "Live Agent is currently {live_agent_status}."),
                 ("system", "Here is the conversation history so far: {chat_history}"),
                 MessagesPlaceholder("chat_history"),
                 ("human", "User said previously: {chat_history}. Now the user says: {input}"),

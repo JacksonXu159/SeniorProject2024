@@ -35,7 +35,7 @@ const useGenAI = () => {
     };
   }, []);
 
-  const sendMessage = async (message, onPartialResponse) => {
+  const sendMessage = async (message, userId, onPartialResponse) => {
     setLoading(true);
     setError(null);
 
@@ -46,8 +46,14 @@ const useGenAI = () => {
     }
 
     try {
-      // Send the message
-      wsRef.current.send(message);
+      // Create a payload object with message and userId
+      const payload = JSON.stringify({
+        message: message,
+        userId: userId
+      });
+      
+      // Send the JSON payload
+      wsRef.current.send(payload);
 
       // Set up message handler for streaming
       const messageHandler = (event) => {
