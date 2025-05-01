@@ -56,11 +56,16 @@ const ToolMessage = ({ content }) => (
   </div>
 );
 
-const MarkdownMessage = ({ content }) => (
-  <div className="markdown-message">
-    <ReactMarkdown rehypePlugins={[]}>{content}</ReactMarkdown>
-  </div>
-);
+const MarkdownMessage = ({ content }) => {
+  // Check if message is from live agent and add special styling
+  const isLiveAgent = content.includes("**Live Agent");
+  
+  return (
+    <div className={`markdown-message ${isLiveAgent ? "live-agent-message" : ""}`}>
+      <ReactMarkdown rehypePlugins={[]}>{content}</ReactMarkdown>
+    </div>
+  );
+};
 
 export default function ChatPopUp() {
   const { userId } = useUserStore();
@@ -116,7 +121,8 @@ export default function ChatPopUp() {
     setMessages((prev) => [...prev, botMessage]);
 
     try {
-      await sendMessage(message, (partialResponse) => {
+      // Pass userId along with the message
+      await sendMessage(message, userId, (partialResponse) => {
         if (partialResponse.includes("🤔")) {
           setSystemMessages((prev) => [...prev, partialResponse]);
         } else if (
@@ -163,13 +169,16 @@ export default function ChatPopUp() {
   console.log("📋 suggestions state:", suggestions);
 
   useEffect(() => {
+    // Reset all messages when userId changes
     setMessages([
       {
-        message: "Hi",
+        message: "Hi! How can I help you today?",
         sender: "Bot",
         direction: "incoming",
       },
     ]);
+    setSystemMessages([]);
+    setToolMessages([]);
   }, [userId]);
 
   return (

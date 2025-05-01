@@ -6,7 +6,7 @@ from textblob import TextBlob
 class MessageAnalyzer:
     def __init__(self, language='en'):
         """Initialize MessageAnalyzer with optional config path and language setting."""
-        self.sentiment_threshold = -0.6  # Negative sentiment threshold
+        self.sentiment_threshold = -0.5  # Negative sentiment threshold
         self.language = language
         
         # Default termination phrases by language
