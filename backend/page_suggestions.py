@@ -12,7 +12,6 @@ def get_page_suggestions(frontend_url: str):
         'dashboard': [
             "What's my current balance?",
             "Show me my recent transactions",
-            "What's my investment performance?",
             "How can I transfer money?"
         ],
         'services': [
@@ -35,5 +34,5 @@ def get_page_suggestions(frontend_url: str):
     }
     
     result = suggestions.get(page, [])
-    print(f"Found {len(result)} suggestions for page {page}")  # Debug print
+    print(f"Suggestions for {page}: {result}")
     return result 
