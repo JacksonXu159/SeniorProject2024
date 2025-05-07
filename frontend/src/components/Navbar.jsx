@@ -12,6 +12,8 @@ const Navbar = () => {
         { page: "Dashboard", route: "/dashboard" },
         { page: "Services", route: "/services" },
         { page: "Transactions", route: "/transactions" },
+        { page: "FAQ", route: "https://support.vanguard.com/" },
+        { page: "Education", route: "https://investor.vanguard.com/investor-resources-education" },
         { page: "Account", route: "/account" },
     ];
 
