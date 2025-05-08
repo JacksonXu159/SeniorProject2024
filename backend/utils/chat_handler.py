@@ -133,6 +133,6 @@ class ChatHandler:
             return True
         return False
     
-    def reset_live_agent_status(self):
+    def set_live_agent_status(self, status):
         """Reset the live agent status back to AI chatbot"""
-        self.live_agent_status = False
+        self.live_agent_status = status

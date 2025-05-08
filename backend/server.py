@@ -9,6 +9,7 @@ from chatbot_langchain import ChatbotLangchain, WebSocketStreamHandler
 from utils.chat_handler import ChatHandler
 from langchain.agents import AgentExecutor
 from typing import Optional
+import json
 
 load_dotenv()
 
@@ -19,7 +20,6 @@ async def stream_agent_response(websocket, message_data):
     handler = WebSocketStreamHandler(websocket)
     
     # Parse message_data as JSON to extract message and userId
-    import json
     try:
         data = json.loads(message_data)
         message = data.get("message", "")
@@ -40,6 +40,10 @@ async def stream_agent_response(websocket, message_data):
     
     # Get chat history for this session
     chat_history = chat_handler.get_chat_history(session_id)
+    print(f"Current chat history: {chat_history}")
+    
+    # Add the current user message to history immediately
+    chat_handler.chat_histories[session_id].append({"role": "human", "content": message})
     
     # Convert raw history to LangChain format
     from langchain_core.messages import HumanMessage, AIMessage
@@ -50,53 +54,78 @@ async def stream_agent_response(websocket, message_data):
         elif entry["role"] == "ai":
             langchain_history.append(AIMessage(content=entry["content"]))
     
-    agent_with_streaming = AgentExecutor(
-        agent=chatbot.chatbot_agent,
-        tools=chatbot.tools,
-        return_intermediate_steps=True, 
-        verbose=True,
-        callbacks=[handler],
-    )
-
-    input_data = {
-        "input": message,
-        "userId": user_id,
-        "frontendUrl": session_id,  # Using session_id as frontendUrl
-        "chat_history": langchain_history,
-        "live_agent_status": "On" if chat_handler.live_agent_status else "Off", 
-    }
-
     try:
-        # Check if message should be handled by chat_handler directly
-        # (for live agent interactions, etc.)
-        if chat_handler.waiting_for_live_agent_response.get(session_id, False) or \
-           (chat_handler.live_agent_status and chat_handler.message_analyzer.check_for_live_agent_termination(message)):
+        # CASE 1: Live agent mode is active
+        if chat_handler.live_agent_status:
+            print("Live agent mode is active, bypassing AI chatbot")
             
-            # Process with chat_handler
-            bot_response = chat_handler.process_message(message, session_id, user_id)
+            # Check for live agent termination command
+            if chat_handler.message_analyzer.check_for_live_agent_termination(message):
+                bot_response = "Live agent session has ended. You're now connected with the AI assistant again. How can I help you?"
+                chat_handler.set_live_agent_status(False)
+            else:
+                # Live agent handles the message
+                result = chat_handler.live_agent.invoke({
+                    "input": message,
+                    "frontendUrl": session_id,
+                    "userId": user_id,
+                    "chat_history": langchain_history,
+                })
+
+                bot_response = result['output']
             
-            # Stream the response word by word
+            # Add response to chat history
+            chat_handler.chat_histories[session_id].append({"role": "ai", "content": bot_response})
+            
+            # Stream the response
             await websocket.send_text("Typing ...")
             await asyncio.sleep(0.5)
-            
-            words = bot_response.split()
-            for word in words:
+            for word in bot_response.split():
                 await websocket.send_text(word + " ")
                 await asyncio.sleep(0.05)
-            
             await websocket.send_text("[END]")
             return
-        
-        # Check if we should offer live agent based on message
-        if not chat_handler.live_agent_status and chat_handler.message_analyzer.should_offer_live_agent(message):
+            
+        # CASE 2: Check for pending live agent acceptance
+        elif session_id in chat_handler.waiting_for_live_agent_response and chat_handler.waiting_for_live_agent_response[session_id]:
+            print("Processing response to live agent offer")
+            
+            # Check if user accepted live agent help
+            if chat_handler.message_analyzer.check_for_live_agent_acceptance(message):
+                # User accepted live agent
+                chat_handler.waiting_for_live_agent_response[session_id] = False
+                chat_handler.set_live_agent_status(True)
+                
+                bot_response = "You're now connected with a live agent who will assist you. Feel free to explain your issue in detail."
+            else:
+                # User declined live agent
+                chat_handler.waiting_for_live_agent_response[session_id] = False
+                
+                bot_response = "I'll continue to assist you as an AI assistant. What else can I help you with?"
+            
+            # Add response to chat history
+            chat_handler.chat_histories[session_id].append({"role": "ai", "content": bot_response})
+            
+            # Stream the response
+            await websocket.send_text("Typing ...")
+            await asyncio.sleep(0.5)
+            for word in bot_response.split():
+                await websocket.send_text(word + " ")
+                await asyncio.sleep(0.05)
+            await websocket.send_text("[END]")
+            return
+            
+        # CASE 3: Check if should offer live agent based on message
+        elif chat_handler.message_analyzer.should_offer_live_agent(message):
+            print("Offering live agent based on message analysis")
+            
             bot_response = chat_handler.message_analyzer.format_live_agent_proposal()
             chat_handler.waiting_for_live_agent_response[session_id] = True
             
-            # Update chat history
-            chat_handler.chat_histories[session_id].append({"role": "human", "content": message})
+            # Add response to chat history
             chat_handler.chat_histories[session_id].append({"role": "ai", "content": bot_response})
             
-            # Stream the response word by word
+            # Stream the response
             await websocket.send_text("🤔 Thinking...")
             await asyncio.sleep(0.5)
             
@@ -107,34 +136,55 @@ async def stream_agent_response(websocket, message_data):
             
             await websocket.send_text("[END]")
             return
-        
-        # Standard agent processing
-        await websocket.send_text("🤔 Thinking...")
-        await asyncio.sleep(0.5) 
-
-        # Use agent with streaming
-        result = await agent_with_streaming.ainvoke(input_data)
-        
-        if result.get('intermediate_steps'):
-            last_step = result['intermediate_steps'][-1]
-            tool_name = last_step[0].tool
-            await websocket.send_text(f"🔍 Using {tool_name}...")
+            
+        # CASE 4: Standard AI chatbot processing
+        else:
+            print("Using standard AI chatbot processing")
+            
+            await websocket.send_text("🤔 Thinking...")
             await asyncio.sleep(0.5) 
-        
-        # Get the final output
-        bot_response = result['output']
-        
-        # Update chat history
-        chat_handler.chat_histories[session_id].append({"role": "human", "content": message})
-        chat_handler.chat_histories[session_id].append({"role": "ai", "content": bot_response})
-        
-        # Stream the response word by word
-        words = bot_response.split()
-        for word in words:
-            await websocket.send_text(word + " ")
-            await asyncio.sleep(0.05) 
-        
-        await websocket.send_text("[END]")
+
+            # Initialize the agent executor
+            agent_with_streaming = AgentExecutor(
+                agent=chatbot.chatbot_agent,
+                tools=chatbot.tools,
+                return_intermediate_steps=True, 
+                verbose=True,
+                callbacks=[handler],
+            )
+
+            # Prepare input data for the agent
+            input_data = {
+                "input": message,
+                "userId": user_id,
+                "frontendUrl": session_id,
+                "chat_history": langchain_history,
+                "live_agent_status": "Off",  # Explicitly set to Off in AI mode
+            }
+            
+            # Use agent with streaming
+            result = await agent_with_streaming.ainvoke(input_data)
+            
+            if result.get('intermediate_steps'):
+                last_step = result['intermediate_steps'][-1]
+                tool_name = last_step[0].tool
+                await websocket.send_text(f"🔍 Using {tool_name}...")
+                await asyncio.sleep(0.5) 
+            
+            # Get the final output
+            bot_response = result['output']
+            
+            # Add response to chat history
+            chat_handler.chat_histories[session_id].append({"role": "ai", "content": bot_response})
+            
+            # Stream the response
+            words = bot_response.split()
+            for word in words:
+                await websocket.send_text(word + " ")
+                await asyncio.sleep(0.05) 
+            
+            await websocket.send_text("[END]")
+            
     except Exception as e:
         print(f"Error in stream_agent_response: {e}")
         await websocket.send_text("Sorry, I encountered an error. Please try again.")
