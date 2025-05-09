@@ -50,7 +50,7 @@ const ToolMessage = ({ content }) => (
 );
 
 const MarkdownMessage = ({ content }) => {
-  const isLiveAgent = content.includes("**Live Agent");
+  const isLiveAgent = content.includes("**Live Agent**");
   return (
       <div className={`markdown-message ${isLiveAgent ? "live-agent-message" : ""}`}>
         <ReactMarkdown rehypePlugins={[]}>{content}</ReactMarkdown>
@@ -117,7 +117,7 @@ export default function ChatPopUp() {
 
     try {
       await sendMessage(message, userId, (partial) => {
-        if (partial.includes("🤔")) setSystemMessages((prev) => [...prev, partial]);
+        if (partial.includes("🤔") || partial.includes("⌨️")) setSystemMessages((prev) => [...prev, partial]);
         else if (partial.includes("🔍") || partial.includes("Invoking:")) setToolMessages([partial]);
         else if (partial === "[END]") {
           setTyping(false);

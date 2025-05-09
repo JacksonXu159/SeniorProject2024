@@ -27,6 +27,7 @@ class ChatHandler:
         if session_id in self.chat_histories:
             self.chat_histories[session_id] = []
             self.live_agent_manager.set_waiting_status(session_id, False)
+            self.live_agent_manager.set_live_agent_status(False)
             return True
         return False
     
@@ -47,6 +48,8 @@ class ChatHandler:
         
         # Get chat history
         chat_history = self.get_chat_history(session_id)
+        if len(chat_history) <= 1:
+            self.live_agent_manager.set_live_agent_status(False)
         langchain_history = self.convert_to_langchain_format(chat_history)
         
         # Process based on conversation state
@@ -68,6 +71,7 @@ class ChatHandler:
             self.add_to_history(session_id, "ai", bot_response)
             
             # Stream the response
+            await self.response_handler.stream_typing(websocket)
             await self.response_handler.stream_response(websocket, bot_response)
             
         elif self.live_agent_manager.is_waiting_for_response(session_id):
@@ -84,6 +88,7 @@ class ChatHandler:
             self.add_to_history(session_id, "ai", bot_response)
             
             # Stream the response
+            await self.response_handler.stream_typing(websocket)
             await self.response_handler.stream_response(websocket, bot_response)
             
         elif self.live_agent_manager.should_offer_live_agent(message):
@@ -95,7 +100,7 @@ class ChatHandler:
             self.add_to_history(session_id, "ai", bot_response)
             
             # Stream the response
-            await self.response_handler.stream_thinking(websocket)
+            await self.response_handler.stream_typing(websocket)
             await self.response_handler.stream_response(websocket, bot_response)
             
         else:

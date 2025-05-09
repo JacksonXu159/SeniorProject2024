@@ -6,12 +6,12 @@ class ResponseHandler:
         self.chatbot = chatbot
         
     async def stream_response(self, websocket, response_text):
-        await websocket.send_text("Typing ...")
-        await asyncio.sleep(0.5)
-        for word in response_text.split():
-            await websocket.send_text(word + " ")
-            await asyncio.sleep(0.05)
+        await websocket.send_text(response_text)
         await websocket.send_text("[END]")
+
+    async def stream_typing(self, websocket):
+        await websocket.send_text("⌨️ Typing ...")
+        await asyncio.sleep(0.5)
         
     async def stream_thinking(self, websocket):
         await websocket.send_text("🤔 Thinking...")
