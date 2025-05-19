@@ -46,7 +46,16 @@ class ChatbotLangchain:
                 - marital status (query with 'marital status')
                 - portfolios (query with 'portfolios')
                 - risk tolerance (query with 'risk tolerance')
-                - services (query with 'services')"""
+                - services (query with 'services')
+                - account name (query with 'account name', 'my name', 'profile name')
+                - gender (query with 'gender') — response restricted for privacy
+                - age (query with 'age', 'how old') — response restricted for privacy
+                - tax filing status (query with 'tax filing status', 'filing status')
+                - tax income bracket (query with 'tax income bracket', 'income bracket', 'tax bracket')
+                - tax filing state (query with 'tax state', 'tax filing state')
+                - estimated retirement age (query with 'retirement age', 'estimate retirement')
+                - spending variation tolerance (query with 'spending variation', 'spending tolerance')
+                - short-term loss sensitivity (query with 'loss sensitivity', 'short-term loss tolerance')"""
             ),
             Tool(
                 name="NavAndFaq",
