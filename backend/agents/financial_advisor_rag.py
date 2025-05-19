@@ -53,6 +53,9 @@ def generate_financial_advice(article_summary, user_profile, fund_recommendation
     - Be **under 350 characters**
     - Be **clear, actionable, and professional**
     - Mention **only** Vanguard fund types (no individual stock picks or external brands)
+    - Menttion at least **two relevant profile attributes** in your advice
+    - Avoid jargon and complex terms
+    - Mention at most ""three"" fund recommendation** in your advice
 
     If any required information is missing, acknowledge it clearly and do **not** attempt to guess.
 
