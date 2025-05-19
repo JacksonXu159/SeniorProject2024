@@ -40,17 +40,37 @@ def summarize_article(text):
     summary_prompt = f"Summarize the following article in less then 350 characters, make it short, concise, and sounds professional:\n\n{text}"
     return llm.invoke(summary_prompt).content
 
-def generate_financial_advice(text, user_profile, fund_recommendations):
+def generate_financial_advice(article_summary, user_profile, fund_recommendations):
     prompt = f"""
-    Based on the following financial article, provide **actionable financial advice** tailored to this user's profile.
-    **Article:** {text}
+    You are a professional financial advisor specializing in personalized, data-driven recommendations.
 
-    **User Profile:**
+
+    Provide **actionable financial advice** tailored to this user's profile, focusing their balance, risk tolerance, marital status, tax filing status, income bracket, tax filing state, estimated retirement age, spending variation tolerance, short-term loss sensitivity, and portfolios. Incorporate relevant fund recommendations as well as insights from the following financial article. Avoid recommending stock picks that are not VANGUARD related.
+
+    Your advice must:
+    - Be based **only** on the user's profile, fund recommendations, and article summary
+    - **Avoid** assumptions or fabricated information
+    - Be **under 350 characters**
+    - Be **clear, actionable, and professional**
+    - Mention **only** Vanguard fund types (no individual stock picks or external brands)
+    - Menttion at least **two relevant profile attributes** in your advice
+    - Avoid jargon and complex terms
+    - Mention at most ""three"" fund recommendation** in your advice
+
+    If any required information is missing, acknowledge it clearly and do **not** attempt to guess.
+
+    You must reference at least **two relevant profile attributes** in your advice.
+
+    Article Summary:
+    {article_summary}
+
+    User Profile:
     {user_profile}
 
-    Focus on their **risk tolerance** (low, medium, high) and balance, and their fund recommendations, but avoid specific stock picks. Keep it **short, clear, professional**, and under 350 characters.
-    **Fund Recommendations:**
+    Fund Recommendations:
     {fund_recommendations}
+
+    Respond now with the tailored financial advice.
     """
     return llm.invoke(prompt).content
 
@@ -131,9 +151,9 @@ def financial_advisor_agent(input_query, user_id, threshold=0.5):
         if result:
             title, article, link, distance = result
             article = summarize_article(article)
-            fund_reccomendations = get_fund_recommendations(query_embedding)
+            fund_recommendations = get_fund_recommendations(query_embedding)
             
-            advice = generate_financial_advice(article, personalized_query, fund_reccomendations)
+            advice = generate_financial_advice(article, personalized_query, fund_recommendations)
 
             advisor_response = (
                 f"**Financial Advisor Insights**\n\n"
