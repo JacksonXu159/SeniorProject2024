@@ -85,7 +85,12 @@ class ChatbotLangchain:
             - Roth IRA vs Traditional IRA
             - investment strategy that best fits my risk tolerence
             **Do NOT use for general finance definitions** like "What are stocks?" or "How does investing work?"
-            **Do NOT give specific stock picks or trading recommendations.**    """
+            **Do NOT give specific stock picks or trading recommendations.**
+            **STRICTLY DO NOT USE** this tool for:
+            -**Do NOT use for general finance definitions** like "What are stocks?" or "How does investing work?"
+            -**Do NOT give specific stock picks or trading recommendations.**    
+            -**DO NOT use to answer questions about providing extra information about a specific fund.** (e.g., "Tell me more about VTI")
+            This tool is only for personalized, high-level strategy — NOT for fund fact lookups or descriptions."""
             )
         ]
         
